@@ -1,6 +1,6 @@
 # SmartBlindServer
 
-The Python package that holds the REST API logic to be used by the mobile app component of this project.
+The Python package containing the Flask RESTful API logic that is utilized by the mobile app component of this project.
 
 ## Prerequisites
 1. `export FLASK_APP=SmartBlindServer.app:main`
