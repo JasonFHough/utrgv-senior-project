@@ -14,3 +14,5 @@ Build Docker container: `docker-compose build`
 ### Start the Container
 
 Start Docker container: `docker-compose up`
+
+After Docker has started the container, the REST API will be accessible at `csci4390.ddns.net/api/v1/.../...`
