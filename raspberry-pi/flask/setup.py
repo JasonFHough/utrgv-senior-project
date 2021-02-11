@@ -18,10 +18,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    entry_points={
-        "console_scripts": [
-            "run-server = SmartBlindServer.app:main"
-        ]
-    },
     python_requires=">=3.7",
 )

@@ -22,18 +22,18 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-raspberry-pi/server/build/
-raspberry-pi/server/develop-eggs/
-raspberry-pi/server/dist/
-raspberry-pi/server/downloads/
-raspberry-pi/server/eggs/
-raspberry-pi/server/.eggs/
-raspberry-pi/server/lib/
-raspberry-pi/server/lib64/
-raspberry-pi/server/parts/
-raspberry-pi/server/sdist/
-raspberry-pi/server/var/
-raspberry-pi/server/wheels/
+raspberry-pi/server/flask/build/
+raspberry-pi/server/flask/develop-eggs/
+raspberry-pi/server/flask/dist/
+raspberry-pi/server/flask/downloads/
+raspberry-pi/server/flask/eggs/
+raspberry-pi/server/flask/.eggs/
+raspberry-pi/server/flask/lib/
+raspberry-pi/server/flask/lib64/
+raspberry-pi/server/flask/parts/
+raspberry-pi/server/flask/sdist/
+raspberry-pi/server/flask/var/
+raspberry-pi/server/flask/wheels/
 *.egg-info/
 .installed.cfg
 *.egg
