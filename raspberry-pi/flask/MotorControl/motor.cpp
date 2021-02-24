@@ -19,11 +19,7 @@ class Motor {
         }
 
         int _status() {
-            if (digitalRead(CONTROL_PIN) == HIGH) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return digitalRead(CONTROL_PIN);
         }
 
         void _open() {

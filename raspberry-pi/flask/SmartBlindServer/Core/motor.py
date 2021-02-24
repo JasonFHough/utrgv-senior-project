@@ -10,8 +10,7 @@ class Motor:
         lib.Motor_blink(self.obj)
 
     def status(self):
-        lib.Motor_status.restype = c_int
-        lib.Motor_status(self.obj)
+        return lib.Motor_status(self.obj)
 
     def open(self):
         lib.Motor_open(self.obj)
