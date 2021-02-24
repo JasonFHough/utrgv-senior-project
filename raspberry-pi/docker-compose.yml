@@ -6,19 +6,30 @@ services:
     build: ./MotorControl
     container_name: motor
     restart: always
+    volumes:
+      - c-library:/MotorControl
 
   flask:
     build: ./flask
     container_name: flask
     restart: always
+    depends_on: 
+      - motor
     environment: 
       - APP_NAME=SmartBlindAPI
     expose: 
       - 8080
+    volumes: 
+      - c-library:/MotorControl/libmotor.so
 
   nginx:
     build: ./nginx
     container_name: nginx
     restart: always
+    depends_on: 
+      - flask
     ports:
       - "80:80"
+
+volumes:
+  c-library:
