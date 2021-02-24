@@ -17,7 +17,3 @@ class Motor:
 
     def close(self):
         lib.Motor_close(self.obj)
-
-m = Motor()
-print(m.status())
-m.blink()
