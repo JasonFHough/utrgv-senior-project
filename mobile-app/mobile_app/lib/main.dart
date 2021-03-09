@@ -55,14 +55,24 @@ class _MyHomePageState extends State<MyHomePage> {
     print(data[1]['title']);
   }
 
+//String token = 'jason-token'
   Future<String> getStatus() async {
     var response = await http.get(
         Uri.encodeFull("http://csci4390.ddns.net/api/v1/blind/status"),
-        headers: {"Accept": "application/json"});
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer jason-token'
+        });
 
-    List data = json.decode(response.body);
+    // List data = json.decode(response.body);
 
-    print(data);
+    // print(data);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to get user details');
+    }
   }
 
   @override
@@ -93,8 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 setState(() {
                   isPowerOn = !isPowerOn;
                 });
-                getTestStatus();
-                //getStatus();
+                //getTestStatus();
+                getStatus();
               },
               icon: Icon(Icons.power_settings_new),
               color: isPowerOn ? Colors.green : Colors.red,
