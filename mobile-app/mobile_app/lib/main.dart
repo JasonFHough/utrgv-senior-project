@@ -43,19 +43,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<String> getTestStatus() async {
-    var response = await http.get(
-        Uri.encodeFull("http://jsonplaceholder.typicode.com/posts"),
-        headers: {"Accept": "application/json"});
-
-    //print(response.body);
-
-    List data = json.decode(response.body);
-
-    print(data[1]['title']);
-  }
-
-//String token = 'jason-token'
   Future<String> getStatus() async {
     var response = await http.get(
         Uri.encodeFull("http://csci4390.ddns.net/api/v1/blind/status"),
@@ -63,15 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
           'Accept': 'application/json',
           'Authorization': 'Bearer jason-token'
         });
-
-    // List data = json.decode(response.body);
-
-    // print(data);
-
+    //List data = json.decode(response.body);
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      print(json.decode(response.body));
+      //print(data[0]['status']);
     } else {
-      throw Exception('Failed to get user details');
+      print('HTTP Status Code: ${response.statusCode}');
+      throw Exception('Failed to load data');
     }
   }
 
@@ -99,38 +84,23 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             IconButton(
-              onPressed: () {
-                setState(() {
-                  isPowerOn = !isPowerOn;
-                });
-                //getTestStatus();
-                getStatus();
-              },
-              icon: Icon(Icons.power_settings_new),
-              color: isPowerOn ? Colors.green : Colors.red,
-              iconSize: 80,
-            ),
+                onPressed: () {
+                  setState(() {
+                    isPowerOn = !isPowerOn;
+                  });
+                  getStatus();
+                },
+                icon: Icon(Icons.power_settings_new),
+                color: isPowerOn ? Colors.green : Colors.red,
+                iconSize: 80),
             isPowerOn
-                ? Text(
-                    'Open',
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.green,
-                      /*backgroundColor: Colors.white*/
-                    ),
-                  )
-                : Text(
-                    'Closed',
-                    style: TextStyle(fontSize: 40, color: Colors.red),
-                  ),
-            SizedBox(
-              width: 50.0,
-              height: 50.0,
-            ),
-            Text(
-              'Status: ',
-              style: TextStyle(fontSize: 30, color: Colors.blue),
-            ),
+                ? Text('Open',
+                    style: TextStyle(fontSize: 40, color: Colors.green))
+                : Text('Closed',
+                    style: TextStyle(fontSize: 40, color: Colors.red)),
+            SizedBox(height: 50.0),
+            Text("Status: ",
+                style: TextStyle(fontSize: 30, color: Colors.blue)),
           ],
         ),
       ),
