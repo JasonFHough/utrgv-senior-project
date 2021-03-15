@@ -17,13 +17,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SmartBlinds',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'SmartBlinds'),
-    );
+        title: 'SmartBlinds',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MyHomePage(title: 'SmartBlinds'));
   }
 }
 
@@ -65,23 +64,19 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Container(
         width: 500.0,
         height: 700.0,
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: isPowerOn
-                ? NetworkImage(
-                    "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png")
-                : NetworkImage(
-                    "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
-            // image: ,
-            fit: BoxFit.cover,
-          ),
-        ),
+            image: DecorationImage(
+                image: isPowerOn
+                    ? NetworkImage(
+                        "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png")
+                    : NetworkImage(
+                        "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
+                // image: ,
+                fit: BoxFit.cover)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
