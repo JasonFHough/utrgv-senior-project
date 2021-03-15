@@ -29,9 +29,11 @@ class _MyAppState extends State<MyApp> {
 
 bool isPowerOn = false;
 String openedBlinds =
-        "https://cdn.discordapp.com/attachments/780477496797036575/816399238161236008/IMG_5469.PNG",
+        "https://cdn.discordapp.com/attachments/780477496797036575/816399238161236008/IMG_5469.PNG", //Discord app is apparently required to show image so opted to upload to a imgage uploader
+    //"https://ibb.co/9GKwjT8",
     closedBlinds =
         "https://cdn.discordapp.com/attachments/780477496797036575/816399238224937000/IMG_5468.PNG";
+//"https://ibb.co/Myv8SS2";
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
