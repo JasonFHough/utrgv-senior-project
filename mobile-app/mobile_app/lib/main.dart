@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mobile_app/apiData.dart';
 import 'api_models/status.dart';
@@ -26,7 +25,8 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-bool isPoweredOn = false;
+//will change later to false since it needs to first get the status and then declare itself true or false
+bool isPoweredOn = true; 
 
 // String openedBlinds =
 //         "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png", //Discord app is apparently required to show image so opted to upload to a imgage uploader
@@ -91,12 +91,9 @@ class _MyHomePageState extends State<MyHomePage> {
         height: 700.0,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: isPoweredOn
-                    ? NetworkImage(
-                        "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png")
-                    : NetworkImage(
-                        "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
-                // image: ,
+                image: isPoweredOn ? 
+                NetworkImage("https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png") : 
+                NetworkImage("https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
                 fit: BoxFit.cover)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -109,15 +106,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 _toggleBlindStatus();
               },
               icon: Icon(Icons.power_settings_new),
-              color: isPoweredOn ? Colors.green : Colors.red,
-              iconSize: 80
-            ),
-            isPoweredOn
-                ? Text('Open',
-                    style: TextStyle(fontSize: 40, color: Colors.green))
-                : Text('Closed',
-                    style: TextStyle(fontSize: 40, color: Colors.red)),
-            SizedBox(height: 50.0),
+              color: isPoweredOn ? Colors.green : Colors.red,iconSize: 80),
+            isPoweredOn ?
+              Text('Open',style: TextStyle(fontSize: 40, color: Colors.green)) : 
+              Text('Closed',style: TextStyle(fontSize: 40, color: Colors.red)),
+            SizedBox(height: 80.0),
             FutureBuilder(
               future: statusFuture,
               builder:
@@ -129,10 +122,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: <Widget>[
                         Text(
                           "Status: ${status.status}",
-                          style: TextStyle(fontSize: 30, color: Colors.blue)),
-                      ]);
+                          style: TextStyle(fontSize: 30, color: Colors.blue))]);
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator(),
+                        SizedBox(width: 20.0), 
+                        Text("Fetching status...", 
+                        style: TextStyle(fontSize: 30, color: Colors.blue))]));
                 }
               }
             ),

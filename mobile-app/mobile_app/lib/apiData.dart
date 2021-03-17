@@ -33,8 +33,8 @@ class ApiEndpoints {
     if (response.statusCode == 200) {
       return Status.fromJson(jsonDecode(response.body));
     } else {
-      print('HTTP Status Code: ${response.statusCode}');
-      throw Exception('Failed to load status');
+      print('HTTP Status Error Code: ${response.statusCode}');
+      throw Exception('Failed to fetch status');
     }
   }
 
@@ -47,8 +47,8 @@ class ApiEndpoints {
     if (response.statusCode == 200) {
       return Toggle.fromJson(jsonDecode(response.body));
     } else {
-      print('HTTP Status Code: ${response.statusCode}');
-      throw Exception('Failed to load status');
+      print('HTTP Status Error Code: ${response.statusCode}');
+      throw Exception('Failed to open blinds');
     }
   }
 
@@ -61,8 +61,8 @@ class ApiEndpoints {
     if (response.statusCode == 200) {
       return Toggle.fromJson(jsonDecode(response.body));
     } else {
-      print('HTTP Status Code: ${response.statusCode}');
-      throw Exception('Failed to load status');
+      print('HTTP Status Error Code: ${response.statusCode}');
+      throw Exception('Failed to close blinds');
     }
   }
 }
