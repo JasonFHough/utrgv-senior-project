@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:mobile_app/apiData.dart';
 import 'api_models/status.dart';
 
@@ -31,10 +29,10 @@ class _MyAppState extends State<MyApp> {
 bool isPoweredOn = false;
 
 // String openedBlinds =
-//         "https://cdn.discordapp.com/attachments/780477496797036575/816399238161236008/IMG_5469.PNG", //Discord app is apparently required to show image so opted to upload to a imgage uploader
+//         "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png", //Discord app is apparently required to show image so opted to upload to a imgage uploader
 //     //"https://ibb.co/9GKwjT8",
 //     closedBlinds =
-//         "https://cdn.discordapp.com/attachments/780477496797036575/816399238224937000/IMG_5468.PNG";
+//         "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png";
 // //"https://ibb.co/Myv8SS2";
 
 class MyHomePage extends StatefulWidget {
@@ -95,9 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
             image: DecorationImage(
                 image: isPoweredOn
                     ? NetworkImage(
-                        "https://cdn.discordapp.com/attachments/780477496797036575/816399238161236008/IMG_5469.PNG")
+                        "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png")
                     : NetworkImage(
-                        "https://cdn.discordapp.com/attachments/780477496797036575/816399238224937000/IMG_5468.PNG"),
+                        "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
                 // image: ,
                 fit: BoxFit.cover)),
         child: Column(
