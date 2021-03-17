@@ -48,11 +48,40 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<Status> statusFuture;
+  bool doCallAPI = false;
 
   @override
   void initState() {
     super.initState();
     statusFuture = ApiEndpoints.getStatus();
+  }
+
+  void _toggleBlindStatus() {
+    //check to see if its open or closed
+    //call open/close endpoint for blinds
+    //update UI, if request was successful
+
+    print("in toggle");
+    ApiEndpoints.getStatus().then((fetchedStatusFuture) {
+      print("in getStatus");
+      String currentStatus = fetchedStatusFuture.status;
+      if(currentStatus == "open") {
+        // Call close endpoint
+        ApiEndpoints.closeBlinds().then((toggleFuture) {
+          print("in close");
+          setState(() {
+            isPoweredOn = false;
+            doCallAPI = false;
+          });
+        });
+      } else {
+        // Call open endpoint
+        ApiEndpoints.openBlinds().then((toggleFuture) {
+          isPoweredOn = true;
+          doCallAPI = false;
+        });
+      }
+    });
   }
 
   @override
@@ -77,26 +106,9 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  //check to see if its open or closed
-                  //call open/close endpoint for blinds
-                  //update UI, if request was successful
-
-                  ApiEndpoints.getStatus().then((fetchedStatusFuture) {
-                    String currentStatus = fetchedStatusFuture.status;
-                    if(currentStatus == "open") {
-                      // Call close endpoint
-                      ApiEndpoints.closeBlinds().then((toggleFuture) {
-                        //if need be, show succesful change of endpoints
-                        isPoweredOn = false;
-                      });
-                    } else {
-                      // Call open endpoint
-                      ApiEndpoints.openBlinds().then((toggleFuture) {
-                        isPoweredOn = true;
-                      });
-                    }
-                  });
+                  doCallAPI = true;
                 });
+                _toggleBlindStatus();
               },
               icon: Icon(Icons.power_settings_new),
               color: isPoweredOn ? Colors.green : Colors.red,
