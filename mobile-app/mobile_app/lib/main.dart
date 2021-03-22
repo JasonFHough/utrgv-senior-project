@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:mobile_app/apiData.dart';
+import 'api_models/status.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,21 +16,24 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SmartBlinds',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'SmartBlinds'),
-    );
+        title: 'SmartBlinds',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MyHomePage(title: 'SmartBlinds'));
   }
 }
 
-bool isPowerOn = false;
-String openedBlinds =
-        "https://cdn.discordapp.com/attachments/780477496797036575/816399238161236008/IMG_5469.PNG",
-    closedBlinds =
-        "https://cdn.discordapp.com/attachments/780477496797036575/816399238224937000/IMG_5468.PNG";
+//will change later to false since it needs to first get the status and then declare itself true or false
+bool isPoweredOn = true; 
+
+// String openedBlinds =
+//         "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png", //Discord app is apparently required to show image so opted to upload to a imgage uploader
+//     //"https://ibb.co/9GKwjT8",
+//     closedBlinds =
+//         "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png";
+// //"https://ibb.co/Myv8SS2";
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -43,83 +45,95 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<String> getTestStatus() async {
-    var response = await http.get(
-        Uri.encodeFull("http://jsonplaceholder.typicode.com/posts"),
-        headers: {"Accept": "application/json"});
+  Future<Status> statusFuture;
+  bool doCallAPI = false;
 
-    //print(response.body);
-
-    List data = json.decode(response.body);
-
-    print(data[1]['title']);
+  @override
+  void initState() {
+    super.initState();
+    statusFuture = ApiEndpoints.getStatus();
   }
 
-  Future<String> getStatus() async {
-    var response = await http.get(
-        Uri.encodeFull("http://csci4390.ddns.net/api/v1/blind/status"),
-        headers: {"Accept": "application/json"});
+  void _toggleBlindStatus() {
+    //check to see if its open or closed
+    //call open/close endpoint for blinds
+    //update UI, if request was successful
 
-    List data = json.decode(response.body);
-
-    print(data);
+    print("in toggle");
+    ApiEndpoints.getStatus().then((fetchedStatusFuture) {
+      print("in getStatus");
+      String currentStatus = fetchedStatusFuture.status;
+      if(currentStatus == "open") {
+        // Call close endpoint
+        ApiEndpoints.closeBlinds().then((toggleFuture) {
+          print("in close");
+          setState(() {
+            isPoweredOn = false;
+            doCallAPI = false;
+          });
+        });
+      } else {
+        // Call open endpoint
+        ApiEndpoints.openBlinds().then((toggleFuture) {
+          isPoweredOn = true;
+          doCallAPI = false;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Container(
         width: 500.0,
         height: 700.0,
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: isPowerOn
-                ? NetworkImage(
-                    "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png")
-                : NetworkImage(
-                    "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
-            // image: ,
-            fit: BoxFit.cover,
-          ),
-        ),
+            image: DecorationImage(
+                image: isPoweredOn ? 
+                NetworkImage("https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png") : 
+                NetworkImage("https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
+                fit: BoxFit.cover)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             IconButton(
               onPressed: () {
                 setState(() {
-                  isPowerOn = !isPowerOn;
+                  doCallAPI = true;
                 });
-                getTestStatus();
-                //getStatus();
+                _toggleBlindStatus();
               },
               icon: Icon(Icons.power_settings_new),
-              color: isPowerOn ? Colors.green : Colors.red,
-              iconSize: 80,
-            ),
-            isPowerOn
-                ? Text(
-                    'Open',
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.green,
-                      /*backgroundColor: Colors.white*/
-                    ),
-                  )
-                : Text(
-                    'Closed',
-                    style: TextStyle(fontSize: 40, color: Colors.red),
-                  ),
-            SizedBox(
-              width: 50.0,
-              height: 50.0,
-            ),
-            Text(
-              'Status: ',
-              style: TextStyle(fontSize: 30, color: Colors.blue),
+              color: isPoweredOn ? Colors.green : Colors.red,iconSize: 80),
+            isPoweredOn ?
+              Text('Open',style: TextStyle(fontSize: 40, color: Colors.green)) : 
+              Text('Closed',style: TextStyle(fontSize: 40, color: Colors.red)),
+            SizedBox(height: 80.0),
+            FutureBuilder(
+              future: statusFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<Status> snapshot) {
+                if (snapshot.hasData) {
+                  Status status = snapshot.data;
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Status: ${status.status}",
+                          style: TextStyle(fontSize: 30, color: Colors.blue))]);
+                } else {
+                  return Center(
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator(),
+                        SizedBox(width: 20.0), 
+                        Text("Fetching status...", 
+                        style: TextStyle(fontSize: 30, color: Colors.blue))]));
+                }
+              }
             ),
           ],
         ),
