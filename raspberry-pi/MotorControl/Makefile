@@ -3,7 +3,7 @@ main:
 	g++ -shared -Wl,-soname,libmotor.so -lwiringPi -o libmotor.so motor.o
 
 clean:
-	rm -rf *.o *.so
+	rm -rf *.o *.so *.out
 
 update: main
 

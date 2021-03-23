@@ -13,9 +13,10 @@ from ctypes import cdll
 
 """
 import os
-print(os.listdir("../MotorControl"))
-print(os.listdir("../SmartBlindServer"))
-lib = cdll.LoadLibrary("../MotorControl/libmotor.so")
+# print(os.listdir("../MotorControl"))
+# print(os.listdir("../SmartBlindServer"))
+# lib = cdll.LoadLibrary("../MotorControl/libmotor.so")
+lib = cdll.LoadLibrary("../../../MotorControl/libmotor.so")
 
 
 class Motor:
@@ -33,3 +34,8 @@ class Motor:
 
     def close(self):
         lib.Motor_close(self.obj)
+
+print("Starting...")
+m = Motor()
+m.open()
+print("Done!")

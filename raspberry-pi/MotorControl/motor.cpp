@@ -3,7 +3,10 @@
 
 using namespace std;
 
-#define CONTROL_PIN 3   // The WiringPi pin number to control
+#define CONTROL_PIN 1   // The WiringPi pin number to control
+
+// For the Raspberry Pi PWM module, the PWM Frequency in Hz = 19,200,000 Hz / pwmClock / pwmRange
+// i.e. If pwmClock is 192 and pwmRange is 2000 we'll get the PWM frequency = 50 
 
 class Motor {
     private:
@@ -23,11 +26,31 @@ class Motor {
         }
 
         void _open() {
-            digitalWrite(CONTROL_PIN, HIGH);
+            pwmSetMode(PWM_MODE_MS);
+            pwmSetClock(192);
+            pwmSetRange(2000);
+
+            while(1) {
+                // Forwards
+                for(int pulse = 50; pulse <= 250; pulse++) {
+                    pwmWrite(CONTROL_PIN, pulse);
+                    delay(1);
+                }
+            }
         }
 
         void _close() {
-            digitalWrite(CONTROL_PIN, LOW);
+            pwmSetMode(PWM_MODE_MS);
+            pwmSetClock(192);
+            pwmSetRange(2000);
+
+            while(1) {
+                // Backwards
+                for(int pulse = 250; pulse >= 50; pulse--) {
+                    pwmWrite(CONTROL_PIN, pulse);
+                    delay(1);
+                }
+            }
         }
 
     public:
@@ -38,8 +61,8 @@ class Motor {
                 return;
             }
 
-            // Set the CONTROL_PIN mode to OUT
-            pinMode(CONTROL_PIN, OUTPUT);
+            // Set the CONTROL_PIN mode to PWM_OUTPUT
+            pinMode(CONTROL_PIN, PWM_OUTPUT);
         }
 
         void blink() {
