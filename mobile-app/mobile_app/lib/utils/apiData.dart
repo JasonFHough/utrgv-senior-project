@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'api_models/status.dart';
-import 'api_models/toggle.dart';
+import 'package:mobile_app/api_models/status.dart';
+import 'package:mobile_app/api_models/toggle.dart';
 
 String blindStatus = "http://csci4390.ddns.net/api/v1/blind/status",
     blindOpen = "http://csci4390.ddns.net/api/v1/blind/open",
