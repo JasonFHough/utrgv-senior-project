@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mobile_app/apiData.dart';
+import 'package:mobile_app/utils/apiData.dart';
 import 'api_models/status.dart';
+import 'screens/splashscreen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(
+    home: SplashScreen(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -16,24 +19,17 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'SmartBlinds',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        // title: 'SmartBlinds',
+        // theme: ThemeData(
+        //   primarySwatch: Colors.blue,
+        //   visualDensity: VisualDensity.adaptivePlatformDensity,
+        // ),
         home: MyHomePage(title: 'SmartBlinds'));
   }
 }
 
 //will change later to false since it needs to first get the status and then declare itself true or false
 bool isPoweredOn = true; 
-
-// String openedBlinds =
-//         "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png", //Discord app is apparently required to show image so opted to upload to a imgage uploader
-//     //"https://ibb.co/9GKwjT8",
-//     closedBlinds =
-//         "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png";
-// //"https://ibb.co/Myv8SS2";
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
