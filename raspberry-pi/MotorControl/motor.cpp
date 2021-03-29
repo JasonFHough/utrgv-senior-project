@@ -1,75 +1,81 @@
-#include <iostream>	
-#include <wiringPi.h>
+#include <iostream>
+#include <csignal>
+#include <pigpio.h>
 
 using namespace std;
 
-#define CONTROL_PIN 1   // The WiringPi pin number to control
+#define CONTROL_PIN 18   // The GPIO/BCM pin number to control
+#define CLOCKWISE_WIDTH 2000    // The width pulse to use for rotating clockwise
+#define COUNTER_CLOCKWISE_WIDTH 1000    // The width pulse to use for rotating counter clockwise
 
-// For the Raspberry Pi PWM module, the PWM Frequency in Hz = 19,200,000 Hz / pwmClock / pwmRange
-// i.e. If pwmClock is 192 and pwmRange is 2000 we'll get the PWM frequency = 50 
+// Servo Datasheet:
+//  https://components101.com/asset/sites/default/files/component_datasheet/MG996R-Datasheet.pdf
+// and
+//  https://components101.com/motors/mg996r-servo-motor-datasheet
+
+// pigpio library documentation:
+//  http://abyz.me.uk/rpi/pigpio/cif.html
+
+// gpioServo(GPIO/BCM Pin number, width value)
+// width value:
+//  2000 = clockwise
+//  1000 = counter-clockwise
 
 class Motor {
     private:
-        void _blink() {
-            int blinkCount = 5;
-            for(int i = 0; i < blinkCount; i++) {
-                // Toggle the LED
-                digitalWrite(CONTROL_PIN, HIGH);
-                delay(500);
-                digitalWrite(CONTROL_PIN, LOW);
-                delay(500);
-            }
+        bool isOpen = false;    // Start off with a closed blind
+
+        // seconds - number of seconds to rotate before stopping
+        void rotateClockwise(double seconds) {
+            gpioServo(CONTROL_PIN, CLOCKWISE_WIDTH);
+            time_sleep(seconds);
+            stopMotor();
         }
 
-        int _status() {
-            return digitalRead(CONTROL_PIN);
+        // seconds - number of seconds to rotate before stopping
+        void rotateCounterClockwise(double seconds) {
+            gpioServo(CONTROL_PIN, COUNTER_CLOCKWISE_WIDTH);
+            time_sleep(seconds);
+            stopMotor();
+        }
+
+        void stopMotor() {
+            gpioServo(CONTROL_PIN, 0);
+        }
+
+        bool _status() {
+            return isOpen;
         }
 
         void _open() {
-            pwmSetMode(PWM_MODE_MS);
-            pwmSetClock(192);
-            pwmSetRange(2000);
+            // Rotate motor
+            rotateCounterClockwise(1);
 
-            while(1) {
-                // Forwards
-                for(int pulse = 50; pulse <= 250; pulse++) {
-                    pwmWrite(CONTROL_PIN, pulse);
-                    delay(1);
-                }
-            }
+            // Toggle state
+            isOpen = !isOpen;
         }
 
         void _close() {
-            pwmSetMode(PWM_MODE_MS);
-            pwmSetClock(192);
-            pwmSetRange(2000);
+            // Rotate motor
+            rotateClockwise(1);
 
-            while(1) {
-                // Backwards
-                for(int pulse = 250; pulse >= 50; pulse--) {
-                    pwmWrite(CONTROL_PIN, pulse);
-                    delay(1);
-                }
-            }
+            // Toggle state
+            isOpen = !isOpen;
         }
 
     public:
         Motor() {
-            // Run WiringPi Setup
-            if(wiringPiSetup() < 0) {
-                cout << "WiringPi Setup Failed." << endl;
+            // Run pigpio Setup
+            if (gpioInitialise() < 0) {
                 return;
             }
-
-            // Set the CONTROL_PIN mode to PWM_OUTPUT
-            pinMode(CONTROL_PIN, PWM_OUTPUT);
         }
 
-        void blink() {
-            return _blink();
+        ~Motor() {
+            gpioTerminate();
         }
 
-        int status() {
+        bool status() {
             return _status();
         }
 
@@ -84,8 +90,7 @@ class Motor {
 
 extern "C" {
     Motor* Motor_new() { return new Motor(); }
-    void Motor_blink(Motor* motor) { motor -> blink(); }
-    int Motor_status(Motor* motor) { return motor -> status(); }
+    bool Motor_status(Motor* motor) { return motor -> status(); }
     void Motor_open(Motor* motor) { motor -> open(); }
     void Motor_close(Motor* motor) { motor -> close(); }
 }
