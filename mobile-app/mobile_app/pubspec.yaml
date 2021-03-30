@@ -29,6 +29,7 @@ dependencies:
   cupertino_icons: ^1.0.0
       # The following adds a library containing awesome icons to use in your application.
   font_awesome_flutter: ^9.0.0
+  sleek_circular_slider: ^2.0.0
 
 dev_dependencies:
   flutter_test:
