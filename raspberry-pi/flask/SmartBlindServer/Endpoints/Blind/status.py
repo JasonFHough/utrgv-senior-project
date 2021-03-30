@@ -1,10 +1,11 @@
 from flask_restful import Resource
 from SmartBlindServer.Core.authentication import auth
-from SmartBlindServer.Core.motor import Motor
 
 
 class BlindStatusResource(Resource):
+    def __init__(self, **kwargs):
+        self.motor = kwargs["motor"]
+
     @auth.login_required
     def get(self):
-        motor = Motor()
-        return {"status": "open" if motor.status() == 1 else "closed"}
+        return {"status": "open" if motor.status() else "closed"}

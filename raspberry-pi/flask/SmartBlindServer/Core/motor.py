@@ -23,20 +23,11 @@ class Motor:
     def __init__(self):
         self.obj = lib.Motor_new()
 
-    def status(self):
+    def status(self) -> bool:
         return True if lib.Motor_status(self.obj) == 1 else False
 
-    def open(self):
+    def open(self) -> None:
         lib.Motor_open(self.obj)
 
-    def close(self):
+    def close(self) -> None:
         lib.Motor_close(self.obj)
-
-print("Starting...")
-m = Motor()
-print("Status: ", m.status())
-m.open()
-print("Status: ", m.status())
-m.close()
-print("Status: ", m.status())
-print("Done!")

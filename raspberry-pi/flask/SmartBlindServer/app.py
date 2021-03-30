@@ -3,13 +3,16 @@ from flask_restful import Api
 from SmartBlindServer.Endpoints.Blind.status import BlindStatusResource
 from SmartBlindServer.Endpoints.Blind.open import BlindOpenResource
 from SmartBlindServer.Endpoints.Blind.close import BlindCloseResource
+from SmartBlindServer.Core.motor import Motor
 
 app = Flask(__name__)
 api = Api(app, prefix="/api/v1")
 
-api.add_resource(BlindStatusResource, "/blind/status")
-api.add_resource(BlindOpenResource, "/blind/open")
-api.add_resource(BlindCloseResource, "/blind/close")
+motor = Motor()
+
+api.add_resource(BlindStatusResource, "/blind/status", resource_class_kwargs={"motor": motor})
+api.add_resource(BlindOpenResource, "/blind/open", resource_class_kwargs={"motor": motor})
+api.add_resource(BlindCloseResource, "/blind/close", resource_class_kwargs={"motor": motor})
 
 if __name__ == "__main__":
     # app.run(debug=True)
