@@ -8,4 +8,4 @@ class BlindStatusResource(Resource):
 
     @auth.login_required
     def get(self):
-        return {"status": "open" if motor.status() else "closed"}
+        return {"status": "open" if self.motor.status() else "closed"}

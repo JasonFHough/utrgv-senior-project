@@ -52,7 +52,7 @@ class Motor {
             rotateCounterClockwise(1);
 
             // Toggle state
-            isOpen = !isOpen;
+            isOpen = true;
         }
 
         void _close() {
@@ -60,7 +60,7 @@ class Motor {
             rotateClockwise(1);
 
             // Toggle state
-            isOpen = !isOpen;
+            isOpen = false;
         }
 
     public:

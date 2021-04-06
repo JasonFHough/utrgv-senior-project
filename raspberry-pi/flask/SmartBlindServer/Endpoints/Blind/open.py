@@ -9,4 +9,4 @@ class BlindOpenResource(Resource):
     @auth.login_required
     def put(self):
         motor.open()
-        return {"result": "opened" if motor.status() else "closed"}
+        return {"result": "opened" if self.motor.status() else "closed"}
