@@ -20,7 +20,7 @@ services:
     expose: 
       - 8080
     volumes: 
-      - c-library:/MotorControl/libmotor.so
+      - c-library:/MotorControl
 
   nginx:
     build: ./nginx
