@@ -37,16 +37,35 @@ For ease of use during deployment, the RPi server utilizes Docker to containeriz
    - `cd smart-blind/raspberry-pi`
    - `pyenv local smart-blind-env`
    - `pip install --upgrade pip`
-9. Install docker-compose
-    - `cd ~/smart-blind/raspberry-pi/flask`
-    - `echo "cryptography==3.3.2" > /tmp/requirements.txt`
-    - `pip install -U docker-compose -r /tmp/requirements.txt`
-    - `rm /tmp/requirements.txt`
-10. Start the server
-    - `cd ~/smart-blind/raspberry-pi`
-    - `docker-compose build`
-    - `docker-compose up`
+9. Create service to start/stop uWSGI
+   - `sudo nano /etc/systemd/system/SmartBlindServer.service`
+   - Enter the following with `<your-user-name>` changed in each path:
+      ```bash
+      [Unit]
+      Description=uWSGI instance to serve SmartBlindServer
+      After=network.target
+
+      [Service]
+      User=root
+      Group=root
+      WorkingDirectory=/home/<your-user-name>/smart-blind/raspberry-pi/flask
+      Environment="PATH=/home/<your-user-name>/.pyenv/versions/3.7.5/envs/smart-blind-env/bin"
+      ExecStart=/usr/bin/sudo /home/<your-user-name>/.pyenv/versions/3.7.5/envs/smart-blind-env/bin/uwsgi --ini app_local.ini
+
+      [Install]
+      WantedBy=multi-user.target
+      ```
+   - Allow sudo to run select commands without password: `sudo visudo`
+   - Add the following to the bottom of the file with `<your-user-name>` changed in each line:
+      ```bash
+      <your-user-name>   ALL=(ALL) NOPASSWD: /usr/bin/systemctl start SmartBlindServer.service
+      <your-user-name>   ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop SmartBlindServer.service
+      <your-user-name>   ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart SmartBlindServer.service
+      <your-user-name>   ALL=(ALL) NOPASSWD: /usr/bin/systemctl enable SmartBlindServer.service
+      ```
 
 ## Usage
 
-Once Docker has started flask and nginx, the REST API will be accessible at: `csci4390.ddns.net/api/v1/.../...`
+Run `bash start.sh` (will require sudo password)
+
+uWSGI logs (Flask logs as well) will be ouputted to `flask/SmartBlindsServer_uwsgi.log`
