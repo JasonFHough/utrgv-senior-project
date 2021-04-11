@@ -1,4 +1,8 @@
-# Sample Usage: sudo bash -l start.sh
+# Sample Usage: bash start.sh
+
+# Create sim links for uwsgi and pip commands so that they can be used with sudo
+sudo ln -s $(which uwsgi) /usr/bin/uwsgi
+sudo ln -s $(which pip) /usr/bin/pip
 
 # ---- C LIBRARY ----
 
@@ -10,7 +14,7 @@ make -C MotorControl
 
 # Ensure Python Flask API has all dependencies installed
 pip install -r flask/requirements.txt
-pip uninstall SmartBlindServer -y && sudo pip install flask/
+pip uninstall SmartBlindServer -y && sudo /home/$(whoami)./.pyenv/shims/pip install flask/
 
 # ---- NGINX ----
 
@@ -24,10 +28,6 @@ sudo unlink /etc/nginx/sites-enabled/default
 sudo service nginx restart
 
 # ---- UWSGI ----
-
-# Create sim links for uwsgi and pip commands so that they can be used with sudo
-sudo ln -s $(which uwsgi) /usr/bin/uwsgi
-sudo ln -s $(which pip) /usr/bin/uwsgi
 
 # Start uWSGI
 sudo systemctl start SmartBlindServer
