@@ -37,7 +37,16 @@ For ease of use during deployment, the RPi server utilizes Docker to containeriz
    - `cd smart-blind/raspberry-pi`
    - `pyenv local smart-blind-env`
    - `pip install --upgrade pip`
-9. Create service to start/stop uWSGI
+9. Install pigpio
+   - `cd ~`
+   - `wget https://github.com/joan2937/pigpio/archive/master.zip`
+   - `sudo apt install unzip`
+   - `unzip master.zip`
+   - `sudo apt install python-setuptools python3-setuptools`
+   - `cd pigpio-master`
+   - `make`
+   - `sudo make install`
+10. Create service to start/stop uWSGI
    - `sudo nano /etc/systemd/system/SmartBlindServer.service`
    - Enter the following with `<your-user-name>` changed in each path:
       ```bash
