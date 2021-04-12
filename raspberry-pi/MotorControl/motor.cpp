@@ -5,6 +5,7 @@
 using namespace std;
 
 #define CONTROL_PIN 18   // The GPIO/BCM pin number to control
+
 #define CLOCKWISE_WIDTH 2000    // The width pulse to use for rotating clockwise
 #define COUNTER_CLOCKWISE_WIDTH 1000    // The width pulse to use for rotating counter clockwise
 
@@ -24,6 +25,12 @@ using namespace std;
 class Motor {
     private:
         bool isOpen = false;    // Start off with a closed blind
+
+        double calculateRequiredTurningTime() {
+            double rotationsPerSecond = 1.70;   // The "eyeballed" amount of seconds it takes for the motor to rotate once
+            int numberOfRotations = 5;          // The number of physical rotations is takes to change the blind state (closed -> open)
+            return rotationsPerSecond * numberOfRotations;
+        }
 
         // seconds - number of seconds to rotate before stopping
         void rotateClockwise(double seconds) {
@@ -49,7 +56,7 @@ class Motor {
 
         void _open() {
             // Rotate motor
-            rotateCounterClockwise(1);
+            rotateCounterClockwise(calculateRequiredTurningTime());
 
             // Toggle state
             isOpen = true;
@@ -57,7 +64,7 @@ class Motor {
 
         void _close() {
             // Rotate motor
-            rotateClockwise(1);
+            rotateClockwise(calculateRequiredTurningTime());
 
             // Toggle state
             isOpen = false;
@@ -94,3 +101,4 @@ extern "C" {
     void Motor_open(Motor* motor) { motor -> open(); }
     void Motor_close(Motor* motor) { motor -> close(); }
 }
+
