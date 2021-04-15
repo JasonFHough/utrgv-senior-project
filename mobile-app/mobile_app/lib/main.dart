@@ -57,27 +57,28 @@ class _MyHomePageState extends State<MyHomePage> {
     statusFuture = ApiEndpoints.getStatus();
   }
 
-  Widget slider1 = SleekCircularSlider(
-    appearance: CircularSliderAppearance(
-        customColors: CustomSliderColors(
-            trackColor: Colors.grey[900],
-            progressBarColors: [
-              Colors.deepPurple,
-              Colors.pinkAccent[400],
-              Colors.indigo[900]
-            ],
-            shadowMaxOpacity: 1,
-            shadowColor: Colors.deepPurple[900],
-            shadowStep: 5),
-        infoProperties:
-            InfoProperties(topLabelText: isPoweredOn ? 'OPEN' : 'Closed'),
-        size: 250),
-    initialValue: 55, // PENDING: Get current state of blinds
-    onChange: (double value) {
-      //PENDING: Sending Value to API
-      print(value);
-    },
-  );
+  //slider widget
+  // Widget slider1 = SleekCircularSlider(
+  //   appearance: CircularSliderAppearance(
+  //       customColors: CustomSliderColors(
+  //           trackColor: Colors.black,
+  //           progressBarColors: [
+  //             Colors.black,
+  //             Colors.blue[400],
+  //             //Colors.grey
+  //           ],
+  //           shadowMaxOpacity: 1,
+  //           shadowColor: Colors.deepPurple[900],
+  //           shadowStep: 5),
+  //       infoProperties:
+  //           InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
+  //       size: 250),
+  //   initialValue: 55, // PENDING: Get current state of blinds
+  //   onChange: (double value) {
+  //     //PENDING: Sending Value to API
+  //     //print(value);
+  //   },
+  // );
 
   void _toggleBlindStatus() {
     //check to see if its open or closed
@@ -109,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SleekCircularSlider slider1;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -141,36 +143,66 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: Icon(Icons.home_rounded),
       ),
       body: Container(
-        width: 500.0,
-        height: 700.0,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: isPoweredOn
-                    ? NetworkImage(
-                        "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png")
-                    : NetworkImage(
-                        "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
-                fit: BoxFit.cover)),
+        // width: 500.0,
+        // height: 700.0,
+        // decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //         image: isPoweredOn
+        //             ? NetworkImage(
+        //                 "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png")
+        //             : NetworkImage(
+        //                 "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
+        //         fit: BoxFit.cover)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            slider1,
-            IconButton(
-                onPressed: () {
-                  setState(() {
-                    doCallAPI = true;
-                  });
-                  _toggleBlindStatus();
-                },
+            Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                Container(height: 250,
+                child: slider1 = SleekCircularSlider(
+    appearance: CircularSliderAppearance(
+        customColors: CustomSliderColors(
+            trackColor: Colors.black,
+            progressBarColors: [
+              Colors.black,
+              Colors.blue[400],
+              //Colors.grey
+            ],
+            shadowMaxOpacity: 1,
+            shadowColor: Colors.deepPurple[900],
+            shadowStep: 5),
+        infoProperties:
+            InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
+        size: 250),
+    initialValue: 55, // PENDING: Get current state of blinds
+    onChange: (double value) {
+      //PENDING: Sending Value to API
+      //print(value);
+    },
+  ),),
+                //SizedBox(height: 80.0),
+                Container(
+                  height: 100,
+                  child:IconButton(
+                  onPressed: () {
+                    setState(() {
+                      doCallAPI = true;
+                    });
+                    _toggleBlindStatus();
+                  }, 
                 icon: Icon(Icons.power_settings_new),
                 color: isPoweredOn ? Colors.green : Colors.red,
                 iconSize: 80),
-            isPoweredOn
-                ? Text('Open',
-                    style: TextStyle(fontSize: 40, color: Colors.green))
-                : Text('Closed',
-                    style: TextStyle(fontSize: 40, color: Colors.red)),
-            SizedBox(height: 80.0),
+            // isPoweredOn
+            //     ? Text('Open',
+            //         style: TextStyle(fontSize: 40, color: Colors.green))
+            //     : Text('Closed',
+            //         style: TextStyle(fontSize: 40, color: Colors.red)),
+                ),
+              ],),
+
+            SizedBox(height: 40.0),
             FutureBuilder(
                 future: statusFuture,
                 builder:
@@ -180,7 +212,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text("Status: ${status.status}",
+                          //Text("Status: ${status.status}",
+                          Text("${status.status}",
                               style:
                                   TextStyle(fontSize: 30, color: Colors.blue))
                         ]);
@@ -190,10 +223,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                           CircularProgressIndicator(),
-                          SizedBox(width: 20.0),
-                          Text("Fetching status...",
-                              style:
-                                  TextStyle(fontSize: 30, color: Colors.blue))
+                          // SizedBox(width: 20.0),
+                          // Text("Fetching status...",
+                          //     style:
+                          //         TextStyle(fontSize: 30, color: Colors.blue))
                         ]));
                   }
                 }),
