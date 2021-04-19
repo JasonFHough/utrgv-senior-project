@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 //will change later to false since it needs to first get the status and then declare itself true or false
-bool isPoweredOn = true;
+bool isPoweredOn = false, isOnline = false, isDark = false, isHot = true;
 
 // String openedBlinds =
 //         "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png", //Discord app is apparently required to show image so opted to upload to a imgage uploader
@@ -101,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         // Call open endpoint
         ApiEndpoints.openBlinds().then((toggleFuture) {
+          print("in open");
           isPoweredOn = true;
           doCallAPI = false;
         });
@@ -118,21 +119,24 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 4.0,
         actions: [
           IconButton(
-            icon: Icon(Icons.public,
-                color: Colors.green, size: 20), // PENDING: Functionality
+            icon: isOnline ? Icon(Icons.public,
+                color: Colors.green, size: 20): Icon(Icons.public_off,
+                color: Colors.red, size: 20), // PENDING: Functionality
             //Icons.public_off apiconnected = false
             //Icons.public apiconnected = true
             onPressed: null,
           ),
           IconButton(
-            icon: Icon(Icons.wb_sunny,
+            icon: isDark ? Icon(Icons.nightlight_round,
+                color: Colors.white, size: 20) : Icon(Icons.wb_sunny,
                 color: Colors.amber[400], size: 20), // PENDING: Functionality
             //Icons.nightlight_round lightSensor = false
             //Icons.wb_sunny lightSensor = true
             onPressed: null,
           ),
           IconButton(
-            icon: Icon(Icons.ac_unit,
+            icon: isHot ? Icon(Icons.thermostat_rounded,
+                color: Colors.red, size: 20): Icon(Icons.thermostat_rounded,
                 color: Colors.lightBlue, size: 20), // PENDING: Functionality
             //Colors.red  = temp hot
             //Colors.orange  = temp warm
@@ -140,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: null,
           ),
         ],
-        leading: Icon(Icons.home_rounded),
+        //leading: Icon(Icons.home_rounded),
       ),
       body: Container(
         // width: 500.0,
@@ -175,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             shadowStep: 5),
                         // infoProperties:
                         //     InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
-                        size: 300),
+                        size: 250),
                     initialValue: 55, // PENDING: Get current state of blinds
                     onChange: (double value) {
                       //PENDING: Sending Value to API
@@ -212,15 +216,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     (BuildContext context, AsyncSnapshot<Status> snapshot) {
                   if (snapshot.hasData) {
                     Status status = snapshot.data;
+                    isOnline = true;
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           //Text("Status: ${status.status}",
-                          Text("${status.status}",
-                              style:
-                                  TextStyle(fontSize: 30, color: Colors.blue))
+                          // Text("${status.status}",
+                          //     style:
+                          //         TextStyle(fontSize: 30, color: Colors.blue))
                         ]);
                   } else {
+                    isOnline = false;
                     return Center(
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

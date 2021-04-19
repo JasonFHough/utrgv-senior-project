@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import 'api_models/status.dart';
 import 'api_models/toggle.dart';
 
-String blindStatus = "http://csci4390.ddns.net/api/v1/blind/status",
-    blindOpen = "http://csci4390.ddns.net/api/v1/blind/open",
-    blindClose = "http://csci4390.ddns.net/api/v1/blind/close";
+String blindStatus = "http://csci4390.ddns.net/api/v1/blind/status",  // http://smartblind.ddns.net/api/v1/blind/status
+    blindOpen = "http://csci4390.ddns.net/api/v1/blind/open",         // http://smartblind.ddns.net/api/v1/blind/open
+    blindClose = "http://csci4390.ddns.net/api/v1/blind/close";       // http://smartblind.ddns.net/api/v1/blind/close
 
 class ApiEndpoints {
   static Future<Status> getStatus() async {
