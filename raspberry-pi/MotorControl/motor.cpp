@@ -26,8 +26,10 @@ class Motor {
     private:
         bool isOpen = false;    // Start off with a closed blind
 
+	int percentBlind = 0;  //Start off closed  percent 0%
+
         double calculateRequiredTurningTime() {
-            double rotationsPerSecond = 1.70;   // The "eyeballed" amount of seconds it takes for the motor to rotate once
+            double rotationsPerSecond = 1.36;   // The "eyeballed" amount of seconds it takes for the motor to rotate once
             int numberOfRotations = 5;          // The number of physical rotations is takes to change the blind state (closed -> open)
             return rotationsPerSecond * numberOfRotations;
         }
@@ -62,6 +64,39 @@ class Motor {
             isOpen = true;
         }
 
+	void _percent(int percent) {
+            
+	    if(percentBlind == percent){
+	    percentBlind = percent;
+            };
+
+	    if (percentBlind > percent){
+            int percentDifference = percentBlind - percent;
+	    double percentSeconds = 25.5(percentDifference/100); 
+
+	    // Rotate motor
+            rotateClockwise(percentSeconds);
+	    };
+
+	    if (percentBlind < percent){
+            int percentDifference = percent - percentBlind;
+            double percentSeconds = 25.5(percentDifference/100);
+
+            // Rotate motor
+            rotateCounterClockwise(percentSeconds);
+            };
+
+            if (percentBlind != 0 || percentBlind =! 100){
+            // Toggle state
+            isOpen = true;
+	    };
+
+            if (percentBlind == 0 || percentBlind == 100){
+	     isOpen = false;	
+	    };
+        }
+
+
         void _close() {
             // Rotate motor
             rotateClockwise(calculateRequiredTurningTime());
@@ -93,12 +128,17 @@ class Motor {
         void close() {
             return _close();
         }
+
+	void percent(int percent){
+	    return _percent(percent)
+	};
 };
+
 
 extern "C" {
     Motor* Motor_new() { return new Motor(); }
     bool Motor_status(Motor* motor) { return motor -> status(); }
     void Motor_open(Motor* motor) { motor -> open(); }
     void Motor_close(Motor* motor) { motor -> close(); }
+    void Motor_close(Motor* motor) {motor -> percent(int percent);}
 }
-

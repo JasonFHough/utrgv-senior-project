@@ -21,3 +21,7 @@ class Motor:
 
     def close(self) -> None:
         lib.Motor_close(self.obj)
+    
+    def percent(self, int) -> None:
+        lib.Motor_percent(self.obj, int)
+
