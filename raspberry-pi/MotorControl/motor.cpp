@@ -26,7 +26,7 @@ class Motor {
     private:
         bool isOpen = false;    // Start off with a closed blind
 
-	int percentBlind = 0;  //Start off closed  percent 0%
+	    int percentBlind = 0;  //Start off closed  percent 0%
 
         double calculateRequiredTurningTime() {
             double rotationsPerSecond = 1.36;   // The "eyeballed" amount of seconds it takes for the motor to rotate once
@@ -140,5 +140,5 @@ extern "C" {
     bool Motor_status(Motor* motor) { return motor -> status(); }
     void Motor_open(Motor* motor) { motor -> open(); }
     void Motor_close(Motor* motor) { motor -> close(); }
-    void Motor_close(Motor* motor) {motor -> percent(int percent);}
+    void Motor_percent(Motor* motor, int percent) {motor -> percent(percent);}
 }
