@@ -159,50 +159,53 @@ class _MyHomePageState extends State<MyHomePage> {
             Stack(
               alignment: AlignmentDirectional.bottomCenter,
               children: [
-                Container(height: 250,
-                child: slider1 = SleekCircularSlider(
-    appearance: CircularSliderAppearance(
-        customColors: CustomSliderColors(
-            trackColor: Colors.black,
-            progressBarColors: [
-              Colors.black,
-              Colors.blue[400],
-              //Colors.grey
-            ],
-            shadowMaxOpacity: 1,
-            shadowColor: Colors.deepPurple[900],
-            shadowStep: 5),
-        infoProperties:
-            InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
-        size: 250),
-    initialValue: 55, // PENDING: Get current state of blinds
-    onChange: (double value) {
-      //PENDING: Sending Value to API
-      //print(value);
-    },
-  ),),
+                Container(
+                  height: 300,
+                  child: slider1 = SleekCircularSlider(
+                    appearance: CircularSliderAppearance(
+                        customColors: CustomSliderColors(
+                            trackColor: Colors.black,
+                            progressBarColors: [
+                              Colors.black,
+                              Colors.blue[400],
+                              //Colors.grey
+                            ],
+                            shadowMaxOpacity: 1,
+                            shadowColor: Colors.deepPurple[900],
+                            shadowStep: 5),
+                        // infoProperties:
+                        //     InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
+                        size: 300),
+                    initialValue: 55, // PENDING: Get current state of blinds
+                    onChange: (double value) {
+                      //PENDING: Sending Value to API
+                      //print(value);
+                    },
+                  ),
+                ),
                 //SizedBox(height: 80.0),
                 Container(
-                  height: 100,
-                  child:IconButton(
-                  onPressed: () {
-                    setState(() {
-                      doCallAPI = true;
-                    });
-                    _toggleBlindStatus();
-                  }, 
-                icon: Icon(Icons.power_settings_new),
-                color: isPoweredOn ? Colors.green : Colors.red,
-                iconSize: 80),
-            // isPoweredOn
-            //     ? Text('Open',
-            //         style: TextStyle(fontSize: 40, color: Colors.green))
-            //     : Text('Closed',
-            //         style: TextStyle(fontSize: 40, color: Colors.red)),
+                  height: 180,
+                  child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          doCallAPI = true;
+                        });
+                        _toggleBlindStatus();
+                      },
+                      icon: Icon(Icons.power_settings_new),
+                      color: isPoweredOn ? Colors.green : Colors.red,
+                      iconSize: 80),
                 ),
-              ],),
-
-            SizedBox(height: 40.0),
+                SizedBox(height: 20.0),
+                isPoweredOn
+                    ? Text('Open',
+                        style: TextStyle(fontSize: 40, color: Colors.green))
+                    : Text('Closed',
+                        style: TextStyle(fontSize: 40, color: Colors.red)),
+              ],
+            ),
+            SizedBox(height: 20.0),
             FutureBuilder(
                 future: statusFuture,
                 builder:
