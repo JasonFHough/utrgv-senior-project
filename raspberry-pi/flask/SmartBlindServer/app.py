@@ -15,7 +15,7 @@ api.add_resource(BlindStatusResource, "/blind/status", resource_class_kwargs={"m
 api.add_resource(BlindOpenResource, "/blind/open", resource_class_kwargs={"motor": motor})
 api.add_resource(BlindCloseResource, "/blind/close", resource_class_kwargs={"motor": motor})
 api.add_resource(BlindPercentResource, "/blind/percent", resource_class_kwargs={"motor": motor})
-@app.route("/blind/percent/<int:percentage>")
+
 
 
 if __name__ == "__main__":
