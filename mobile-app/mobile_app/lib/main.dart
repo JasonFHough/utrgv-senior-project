@@ -30,13 +30,8 @@ class _MyAppState extends State<MyApp> {
 
 //will change later to false since it needs to first get the status and then declare itself true or false
 bool isPoweredOn = false, isOnline = false, isDark = false, isHot = true;
-
-// String openedBlinds =
-//         "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png", //Discord app is apparently required to show image so opted to upload to a imgage uploader
-//     //"https://ibb.co/9GKwjT8",
-//     closedBlinds =
-//         "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png";
-// //"https://ibb.co/Myv8SS2";
+String openedBlinds = 'https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png',
+      closedBlinds = 'https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -57,28 +52,27 @@ class _MyHomePageState extends State<MyHomePage> {
     statusFuture = ApiEndpoints.getStatus();
   }
 
-  //slider widget
-  // Widget slider1 = SleekCircularSlider(
-  //   appearance: CircularSliderAppearance(
-  //       customColors: CustomSliderColors(
-  //           trackColor: Colors.black,
-  //           progressBarColors: [
-  //             Colors.black,
-  //             Colors.blue[400],
-  //             //Colors.grey
-  //           ],
-  //           shadowMaxOpacity: 1,
-  //           shadowColor: Colors.deepPurple[900],
-  //           shadowStep: 5),
-  //       infoProperties:
-  //           InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
-  //       size: 250),
-  //   initialValue: 55, // PENDING: Get current state of blinds
-  //   onChange: (double value) {
-  //     //PENDING: Sending Value to API
-  //     //print(value);
-  //   },
-  // );
+  //slider widget  
+  SleekCircularSlider slider1 = SleekCircularSlider(
+                    appearance: CircularSliderAppearance(
+                        customColors: CustomSliderColors(
+                            trackColor: Colors.black,
+                            progressBarColors: [
+                              Colors.black,
+                              Colors.blue[400],
+                              //Colors.grey
+                            ],
+                            shadowMaxOpacity: 1,
+                            shadowColor: Colors.deepPurple[900],
+                            shadowStep: 5),
+                        // infoProperties:
+                        //     InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
+                        size: 250),
+                    initialValue: 55, // PENDING: Get current state of blinds
+                    onChange: (double value) {
+                      //PENDING: Sending Value to API
+                      //print(value);
+                    });
 
   void _toggleBlindStatus() {
     //check to see if its open or closed
@@ -101,7 +95,6 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         // Call open endpoint
         ApiEndpoints.openBlinds().then((toggleFuture) {
-          print("in open");
           isPoweredOn = true;
           doCallAPI = false;
         });
@@ -111,7 +104,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SleekCircularSlider slider1;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -147,49 +139,27 @@ class _MyHomePageState extends State<MyHomePage> {
         //leading: Icon(Icons.home_rounded),
       ),
       body: Container(
-        // width: 500.0,
-        // height: 700.0,
-        // decoration: BoxDecoration(
-        //     image: DecorationImage(
-        //         image: isPoweredOn
-        //             ? NetworkImage(
-        //                 "https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png")
-        //             : NetworkImage(
-        //                 "https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png"),
-        //         fit: BoxFit.cover)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Stack(
+            Expanded(
+              flex: 3,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: isPoweredOn ? NetworkImage(openedBlinds) : NetworkImage(closedBlinds),
+                      fit: BoxFit.scaleDown)))),
+            Expanded(
+              flex: 4,
+              child: Stack(
               alignment: AlignmentDirectional.bottomCenter,
               children: [
                 Container(
                   height: 300,
-                  child: slider1 = SleekCircularSlider(
-                    appearance: CircularSliderAppearance(
-                        customColors: CustomSliderColors(
-                            trackColor: Colors.black,
-                            progressBarColors: [
-                              Colors.black,
-                              Colors.blue[400],
-                              //Colors.grey
-                            ],
-                            shadowMaxOpacity: 1,
-                            shadowColor: Colors.deepPurple[900],
-                            shadowStep: 5),
-                        // infoProperties:
-                        //     InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
-                        size: 250),
-                    initialValue: 55, // PENDING: Get current state of blinds
-                    onChange: (double value) {
-                      //PENDING: Sending Value to API
-                      //print(value);
-                    },
-                  ),
+                  child: slider1,
                 ),
-                //SizedBox(height: 80.0),
                 Container(
-                  height: 180,
+                  height: 150,
                   child: IconButton(
                       onPressed: () {
                         setState(() {
@@ -201,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: isPoweredOn ? Colors.green : Colors.red,
                       iconSize: 80),
                 ),
-                SizedBox(height: 20.0),
+                //SizedBox(height: 20.0),
                 isPoweredOn
                     ? Text('Open',
                         style: TextStyle(fontSize: 40, color: Colors.green))
@@ -209,8 +179,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(fontSize: 40, color: Colors.red)),
               ],
             ),
-            SizedBox(height: 20.0),
-            FutureBuilder(
+            ),
+            Expanded(
+              flex: 2,
+              child: FutureBuilder(
                 future: statusFuture,
                 builder:
                     (BuildContext context, AsyncSnapshot<Status> snapshot) {
@@ -221,9 +193,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           //Text("Status: ${status.status}",
-                          // Text("${status.status}",
-                          //     style:
-                          //         TextStyle(fontSize: 30, color: Colors.blue))
+                          Text("${status.status}",
+                              style:
+                                  TextStyle(fontSize: 30, color: Colors.blue))
                         ]);
                   } else {
                     isOnline = false;
@@ -239,6 +211,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         ]));
                   }
                 }),
+            ),
+            
           ],
         ),
       ),
