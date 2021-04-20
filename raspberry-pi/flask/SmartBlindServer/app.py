@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from SmartBlindServer.Endpoints.Blind.status import BlindStatusResource
+#from SmartBlindServer.Endpoints.Blind.statusPercent import BlindStatusPercentResource
 from SmartBlindServer.Endpoints.Blind.open import BlindOpenResource
 from SmartBlindServer.Endpoints.Blind.close import BlindCloseResource
 from SmartBlindServer.Endpoints.Blind.percent import BlindPercentResource
@@ -12,6 +13,7 @@ api = Api(app, prefix="/api/v1")
 motor = Motor()
 
 api.add_resource(BlindStatusResource, "/blind/status", resource_class_kwargs={"motor": motor})
+#api.add_resource(BlindStatusResource, "/blind/statuspercent", resource_class_kwargs={"motor": motor})
 api.add_resource(BlindOpenResource, "/blind/open", resource_class_kwargs={"motor": motor})
 api.add_resource(BlindCloseResource, "/blind/close", resource_class_kwargs={"motor": motor})
 api.add_resource(BlindPercentResource, "/blind/percent", resource_class_kwargs={"motor": motor})

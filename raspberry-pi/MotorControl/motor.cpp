@@ -26,7 +26,7 @@ class Motor {
     private:
         bool isOpen = false;    // Start off with a closed blind
 
-	int percentBlind = 0;  //Start off closed  percent 0%\
+	int percentBlind = 0;  //Start off closed  percent 0%
 
 	private:
 
@@ -55,8 +55,12 @@ class Motor {
         }
 
         bool _status() {
-            return isOpen, percentBlind;
+            return isOpen;
         }
+
+	int _percentStatus(){
+	    return percentBlind;
+	}
 
         void _open() {
             // Rotate motor
@@ -78,8 +82,6 @@ class Motor {
 	    //cout << "pecentBlind > percent " << percentSeconds << endl;
 	    // Rotate motor
             rotateClockwise(percentSeconds);
-
-	    percentBlind = percent;
 	    }
 
 	    else if (percentBlind < percent){
@@ -92,9 +94,8 @@ class Motor {
 
             // Rotate motor
             rotateCounterClockwise(percentSeconds);
-
-	    percentBlind = percent;
             }
+	    percentBlind = percent;
 
             if (percentBlind != 0 || percentBlind != 100){
             // Toggle state
@@ -131,6 +132,10 @@ class Motor {
             return _status();
         }
 
+	int percentStatus(){
+	    return _percentStatus();
+	}
+
         void open() {
             return _open();
         }
@@ -141,13 +146,14 @@ class Motor {
 
 	void percent(int percent){
 	    return _percent(percent);
-	};
+	}
 };
 
 
 extern "C" {
     Motor* Motor_new() { return new Motor(); }
     bool Motor_status(Motor* motor) { return motor -> status(); }
+     int Motor_percentStatus(Motor* motor) { return motor -> percentStatus();}
     void Motor_open(Motor* motor) { motor -> open(); }
     void Motor_close(Motor* motor) { motor -> close(); }
     void Motor_percent(Motor* motor, int percent) {motor -> percent(percent);}
