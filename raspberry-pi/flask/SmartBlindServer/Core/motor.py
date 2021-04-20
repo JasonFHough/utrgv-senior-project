@@ -16,7 +16,7 @@ from ctypes import cdll
 import os
 # print(os.listdir("."))
 lib = cdll.LoadLibrary("../MotorControl/libmotor.so")           # For docker
-# lib = cdll.LoadLibrary("../../../MotorControl/libmotor.so")     # For local testing if running motor.py in it's own directory
+#lib = cdll.LoadLibrary("../../../MotorControl/libmotor.so")     # For local testing if running motor.py in it's own directory
 # lib = cdll.LoadLibrary("./MotorControl/libmotor.so")              # For running locally via start.sh
 
 
@@ -24,15 +24,16 @@ class Motor:
     def __init__(self):
         self.obj = lib.Motor_new()
 
-    def status(self) -> bool:
+    def status(self):
         return True if lib.Motor_status(self.obj) == 1 else False
 
-    def open(self) -> None:
+    def open(self):
         lib.Motor_open(self.obj)
 
-    def close(self) -> None:
+    def close(self):
         lib.Motor_close(self.obj)
     
-    def percent(self, int) -> None:
-        lib.Motor_percent(self.obj, int)
+    def percent(self, percent):
+        lib.Motor_percent(self.obj, percent)
+
 

@@ -10,7 +10,7 @@ class BlindPercentResource(Resource):
 #    @auth.login_required
     def put(self):
         args = request.args
-        percentage = args['percentage']
-        self.motor.percent(percentage)
+        percent = args['percentage']
+        self.motor.percent(int(percent))
         return {"result": "opened" if self.motor.status() else "closed"}
 
