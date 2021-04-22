@@ -2,11 +2,15 @@ import 'dart:async';
 import 'api_models/status.dart';
 
 import 'package:flutter/material.dart';
-import 'package:mobile_app/apiData.dart';
+import 'package:mobile_app/utils/apiData.dart';
+import 'screens/splashscreen.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: SplashScreen(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -29,7 +33,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 //will change later to false since it needs to first get the status and then declare itself true or false
-bool isPoweredOn = false, isOnline = false, isDark = false, isHot = true;
+bool isPoweredOn = false, isOnline = false;
 String openedBlinds = 'https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png',
       closedBlinds = 'https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png';
 
@@ -63,11 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               //Colors.grey
                             ],
                             shadowMaxOpacity: 1,
-                            shadowColor: Colors.deepPurple[900],
+                            shadowColor: Colors.white,
                             shadowStep: 5),
-                        // infoProperties:
-                        //     InfoProperties(topLabelText: isPoweredOn ? 'Open' : 'Closed'),
-                        size: 250),
+                        size:250),
                     initialValue: 55, // PENDING: Get current state of blinds
                     onChange: (double value) {
                       //PENDING: Sending Value to API
@@ -92,58 +94,39 @@ class _MyHomePageState extends State<MyHomePage> {
             doCallAPI = false;
           });
         });
-      } else {
+      } else if (currentStatus == "closed") {
         // Call open endpoint
         ApiEndpoints.openBlinds().then((toggleFuture) {
-          isPoweredOn = true;
-          doCallAPI = false;
+         print("in open");
+          setState(() {
+            isPoweredOn = true;
+            doCallAPI = false;
+          });
         });
-      }
-    });
+      }});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[600],
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Colors.grey[850],
         elevation: 4.0,
         actions: [
           IconButton(
-            icon: isOnline ? Icon(Icons.public,
-                color: Colors.green, size: 20): Icon(Icons.public_off,
-                color: Colors.red, size: 20), // PENDING: Functionality
-            //Icons.public_off apiconnected = false
-            //Icons.public apiconnected = true
+            icon: isOnline ? Icon(Icons.public, color: Colors.green, size: 20)
+            : Icon(Icons.public_off,color: Colors.red, size: 20), 
             onPressed: null,
-          ),
-          IconButton(
-            icon: isDark ? Icon(Icons.nightlight_round,
-                color: Colors.white, size: 20) : Icon(Icons.wb_sunny,
-                color: Colors.amber[400], size: 20), // PENDING: Functionality
-            //Icons.nightlight_round lightSensor = false
-            //Icons.wb_sunny lightSensor = true
-            onPressed: null,
-          ),
-          IconButton(
-            icon: isHot ? Icon(Icons.thermostat_rounded,
-                color: Colors.red, size: 20): Icon(Icons.thermostat_rounded,
-                color: Colors.lightBlue, size: 20), // PENDING: Functionality
-            //Colors.red  = temp hot
-            //Colors.orange  = temp warm
-            //Colors.lightBlue = temp cold
-            onPressed: null,
-          ),
-        ],
-        //leading: Icon(Icons.home_rounded),
-      ),
+          )]),
+
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              flex: 3,
+              flex: 5,
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -155,11 +138,11 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: AlignmentDirectional.bottomCenter,
               children: [
                 Container(
-                  height: 300,
+                  height: 230,
                   child: slider1,
                 ),
                 Container(
-                  height: 150,
+                  height: 115,
                   child: IconButton(
                       onPressed: () {
                         setState(() {
@@ -171,15 +154,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: isPoweredOn ? Colors.green : Colors.red,
                       iconSize: 80),
                 ),
-                //SizedBox(height: 20.0),
-                isPoweredOn
-                    ? Text('Open',
-                        style: TextStyle(fontSize: 40, color: Colors.green))
-                    : Text('Closed',
-                        style: TextStyle(fontSize: 40, color: Colors.red)),
-              ],
-            ),
-            ),
+                Container(
+                  height: 38,
+                  child: isPoweredOn
+                    ? Text('Open', style: TextStyle(fontSize: 40, color: Colors.green))
+                    : Text('Closed', style: TextStyle(fontSize: 40, color: Colors.red)),)
+              ])),
             Expanded(
               flex: 2,
               child: FutureBuilder(
@@ -209,13 +189,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           //     style:
                           //         TextStyle(fontSize: 30, color: Colors.blue))
                         ]));
-                  }
-                }),
-            ),
-            
-          ],
-        ),
-      ),
-    );
+                  }}))])));
   }
 }

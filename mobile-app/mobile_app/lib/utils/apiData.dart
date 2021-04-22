@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'api_models/status.dart';
-import 'api_models/toggle.dart';
+import 'package:mobile_app/api_models/status.dart';
+import 'package:mobile_app/api_models/toggle.dart';
 
 String blindStatus = "http://csci4390.ddns.net/api/v1/blind/status",  // http://smartblind.ddns.net/api/v1/blind/status
     blindOpen = "http://csci4390.ddns.net/api/v1/blind/open",         // http://smartblind.ddns.net/api/v1/blind/open
@@ -10,21 +10,6 @@ String blindStatus = "http://csci4390.ddns.net/api/v1/blind/status",  // http://
 
 class ApiEndpoints {
   static Future<Status> getStatus() async {
-    // var response = await http.get(Uri.encodeFull(blindStatus), headers: {
-    //   'Accept': 'application/json',
-    //   'Authorization': 'Bearer jason-token'
-    // }).then(
-    //   if (response.statusCode == 200) {
-    //     print(json.decode(response.body));
-    //     // List status = json.decode(response.body);
-    //     Map responseBody = json.decode(response.body);
-    //     return responseBody["status"];
-    //   } else {
-    //     print('HTTP Status Code: ${response.statusCode}');
-    //     throw Exception('Failed to load status');
-    //   }
-    // );
-
     var response = await http.get(Uri.encodeFull(blindStatus), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer jason-token'
@@ -66,3 +51,18 @@ class ApiEndpoints {
     }
   }
 }
+
+    // var response = await http.get(Uri.encodeFull(blindStatus), headers: {
+    //   'Accept': 'application/json',
+    //   'Authorization': 'Bearer jason-token'
+    // }).then(
+    //   if (response.statusCode == 200) {
+    //     print(json.decode(response.body));
+    //     // List status = json.decode(response.body);
+    //     Map responseBody = json.decode(response.body);
+    //     return responseBody["status"];
+    //   } else {
+    //     print('HTTP Status Code: ${response.statusCode}');
+    //     throw Exception('Failed to load status');
+    //   }
+    // );
