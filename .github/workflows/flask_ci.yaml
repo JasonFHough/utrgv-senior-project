@@ -6,24 +6,21 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: 3.7.5
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.7.5
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.7.5'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pytest
         if [ -f raspberry-pi/flask/requirements.txt ]; then pip install -r raspberry-pi/flask/requirements.txt; fi
-        
+
     - name: Run tests with pytest
       run: |
         python -m pytest --capture=tee-sys
