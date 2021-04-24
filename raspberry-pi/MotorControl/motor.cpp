@@ -59,14 +59,6 @@ class Motor {
             return currentPercentage;
         }
 
-        void _open() {
-            // Rotate motor
-            rotateCounterClockwise(calculateRequiredTurningTime());
-
-            // Toggle state
-            isOpen = true;
-        }
-
         // percent - the percentage to move the blind to
         void _moveToPercent(int percent) {
             // Blind is already at requested percent - do nothing
@@ -100,13 +92,14 @@ class Motor {
             }
         }
 
+        void _open() {
+            // Rotate motor to get to 50% (default open percentage)
+            _moveToPercent(50);
+        }
 
         void _close() {
-            // Rotate motor
-            rotateClockwise(calculateRequiredTurningTime());
-
-            // Toggle state
-            isOpen = false;
+            // Rotate motor to get to 0% (default closed percentage)
+            _moveToPercent(0);
         }
 
     public:
@@ -129,16 +122,16 @@ class Motor {
             return _currentPercent();
         }
 
+        void moveToPercent(int percent){
+            return _moveToPercent(percent);
+        }
+
         void open() {
             return _open();
         }
 
         void close() {
             return _close();
-        }
-
-        void moveToPercent(int percent){
-            return _moveToPercent(percent);
         }
 };
 
@@ -147,7 +140,7 @@ extern "C" {
     Motor* Motor_new() { return new Motor(); }
     bool Motor_status(Motor* motor) { return motor -> status(); }
     int Motor_currentPercent(Motor* motor) { return motor -> currentPercent(); }
+    void Motor_moveToPercent(Motor* motor, int percent) { motor -> moveToPercent(percent); }
     void Motor_open(Motor* motor) { motor -> open(); }
     void Motor_close(Motor* motor) { motor -> close(); }
-    void Motor_moveToPercent(Motor* motor, int percent) { motor -> moveToPercent(percent); }
 }
