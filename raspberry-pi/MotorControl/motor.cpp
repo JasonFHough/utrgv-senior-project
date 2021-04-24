@@ -93,10 +93,10 @@ class Motor {
 
             // Update the open/closed blind state
             // The blind is closed if the percentage is 0% or 100%, otherwise it is open
-            if (currentPercentage != 0 || currentPercentage != 100) {
-                isOpen = true;
-            } else {
+            if (currentPercentage == 0 || currentPercentage == 100) {
                 isOpen = false;
+            } else {
+                isOpen = true;
             }
         }
 
