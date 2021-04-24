@@ -78,22 +78,13 @@ class Motor {
             rotateClockwise(percentSeconds);
 	    };
 
-	    if (percentBlind < percent){
-            int percentDifference = percent - percentBlind;
-            double percentSeconds = 25.5(percentDifference/100);
-
-            // Rotate motor
-            rotateCounterClockwise(percentSeconds);
-            };
-
-            if (percentBlind != 0 || percentBlind =! 100){
-            // Toggle state
-            isOpen = true;
-	    };
-
-            if (percentBlind == 0 || percentBlind == 100){
-	     isOpen = false;	
-	    };
+            // Update the open/closed blind state
+            // The blind is closed if the percentage is 0% or 100%, otherwise it is open
+            if (currentPercentage == 0 || currentPercentage == 100) {
+                isOpen = false;
+            } else {
+                isOpen = true;
+            }
         }
 
 
