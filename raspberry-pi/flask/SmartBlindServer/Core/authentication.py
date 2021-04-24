@@ -7,6 +7,7 @@ auth = HTTPTokenAuth(scheme="Bearer")
 
 @auth.verify_token
 def verify_token(token):
+    print(os.listdir("."))
     token_json_path = "SmartBlindServer/Core/tokens.json"
     if not os.path.exists(token_json_path):
         token_json_path = "tokens.json"
