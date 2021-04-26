@@ -1,10 +1,12 @@
-# Docker
-For ease of use during deployment, the RPi server utilizes Docker to containerize all of the required components.
+# Setup
+Follow the instructions below to configure a RaspberryPi with a fresh install of RaspberryPi OS Lite
 
 ## Prerequisites
 
-1. [Configure a Static IP](https://www.raspberrypi.org/documentation/configuration/tcpip/) for the Raspberry Pi
-2. Port forward port 80 to the assigned static IP address
+1. Raspberry Pi OS Lite
+2. [Configure a Static IP](https://www.raspberrypi.org/documentation/configuration/tcpip/) for the Raspberry Pi
+3. Port forward port 80 to the assigned static IP address of the raspberry pi
+4. DDNS address (i.e. noip.com) pointing to the Public IP address of the LAN the Raspberry Pi is connected to
 
 ## Raspberry Pi Setup
 
@@ -71,9 +73,15 @@ For ease of use during deployment, the RPi server utilizes Docker to containeriz
       <your-user-name>   ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart SmartBlindServer.service
       <your-user-name>   ALL=(ALL) NOPASSWD: /usr/bin/systemctl enable SmartBlindServer.service
       ```
+11. Ensure username and URL is specified correctly
+   -  `flask/app_local.ini`
+      -  `logto` path
+   -  `nginx/nginx_local.conf`
+      -  `server_name` address
+      -  `uwsgi_pass` path
 
 ## Usage
 
-Run `bash start.sh` (will require sudo password)
+Run `bash start.sh && sudo systemctl restart SmartBlindServer` (will require sudo password)
 
-uWSGI logs (Flask logs as well) will be ouputted to `flask/SmartBlindsServer_uwsgi.log`
+uWSGI logs (i.e. Anything that goes wrong within Flask) will be ouputted to `flask/SmartBlindsServer_uwsgi.log`
