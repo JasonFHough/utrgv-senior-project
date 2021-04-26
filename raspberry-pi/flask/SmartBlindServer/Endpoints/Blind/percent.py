@@ -22,6 +22,3 @@ class BlindPercentResource(Resource):
             "new_percent": self.motor.get_current_percent(),
             "result": "opened" if self.motor.status() else "closed"
         }
-
-
-
