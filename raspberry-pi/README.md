@@ -18,10 +18,7 @@ Follow the instructions below to configure a RaspberryPi with a fresh install of
    - `sudo apt-get install git`
 4. Clone git repo
    - `git clone https://github.com/JasonFHough/utrgv-senior-project.git smart-blind`
-5. Add non-root user to docker group
-   - NOTE: Ensure current user is a non-root user
-   - `sudo usermod -aG docker <your-user-name>`
-6. Install pyenv and pyenv-virtualenv
+5. Install pyenv and pyenv-virtualenv
    - `curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash`
    - Copy the following into `~/.bashrc`:
    ```bash
@@ -29,14 +26,14 @@ Follow the instructions below to configure a RaspberryPi with a fresh install of
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
    ```
-7. Create Python virtual environment
+6. Create Python virtual environment
    - `sudo apt-get install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl`
    - `pyenv install -v 3.7.5`
    - `pyenv virtualenv 3.7.5 smart-blind-env`
    - `cd smart-blind/raspberry-pi`
    - `pyenv local smart-blind-env`
    - `pip install --upgrade pip`
-8. Install pigpio
+7. Install pigpio
    - `cd ~`
    - `wget https://github.com/joan2937/pigpio/archive/master.zip`
    - `sudo apt install unzip`
@@ -45,9 +42,9 @@ Follow the instructions below to configure a RaspberryPi with a fresh install of
    - `cd pigpio-master`
    - `make`
    - `sudo make install`
-9. Install nginx
+8. Install nginx
    - `sudo apt install nginx`
-10. Create service to start/stop uWSGI
+9.  Create service to start/stop uWSGI
    - `sudo nano /etc/systemd/system/SmartBlindServer.service`
    - Enter the following with `<your-user-name>` changed in each path:
       ```bash
