@@ -24,10 +24,11 @@ using namespace std;
 
 class Motor {
     private:
-        bool isOpen = false;    // Start off with a closed blind
+        bool isOpen = false;        // Start off with a closed blind
+	    int currentPercentage = 0;  // Start off with a closed 0%
 
         double calculateRequiredTurningTime() {
-            double rotationsPerSecond = 1.70;   // The "eyeballed" amount of seconds it takes for the motor to rotate once
+            double rotationsPerSecond = 1.36;   // The "eyeballed" amount of seconds it takes for the motor to rotate once
             int numberOfRotations = 5;          // The number of physical rotations is takes to change the blind state (closed -> open)
             return rotationsPerSecond * numberOfRotations;
         }
@@ -54,20 +55,51 @@ class Motor {
             return isOpen;
         }
 
-        void _open() {
-            // Rotate motor
-            rotateCounterClockwise(calculateRequiredTurningTime());
+        int _currentPercent(){
+            return currentPercentage;
+        }
 
-            // Toggle state
-            isOpen = true;
+        // percent - the percentage to move the blind to
+        void _moveToPercent(int percent) {
+            // Blind is already at requested percent - do nothing
+            if(currentPercentage == percent) {
+                return;
+            }
+
+            if (currentPercentage > percent) {          // Blind is higher than requested percent - move it down (clockwise)
+                int percentDifference = currentPercentage - percent;
+                double percentSeconds = 2 * calculateRequiredTurningTime() * ((double)percentDifference / (double)100); 
+                
+                // Rotate motor
+                rotateClockwise(percentSeconds);
+            } else if (currentPercentage < percent) {   // Blind is lower than requested percent - move it up (counter-clockwise)
+                int percentDifference = percent - currentPercentage;
+                double percentSeconds = 2 * calculateRequiredTurningTime() * ((double)percentDifference / (double)100);
+
+                // Rotate motor
+                rotateCounterClockwise(percentSeconds);
+            }
+
+            // Update the blind's current percentage
+            currentPercentage = percent;
+
+            // Update the open/closed blind state
+            // The blind is closed if the percentage is 0% or 100%, otherwise it is open
+            if (currentPercentage == 0 || currentPercentage == 100) {
+                isOpen = false;
+            } else {
+                isOpen = true;
+            }
+        }
+
+        void _open() {
+            // Rotate motor to get to 50% (default open percentage)
+            _moveToPercent(50);
         }
 
         void _close() {
-            // Rotate motor
-            rotateClockwise(calculateRequiredTurningTime());
-
-            // Toggle state
-            isOpen = false;
+            // Rotate motor to get to 0% (default closed percentage)
+            _moveToPercent(0);
         }
 
     public:
@@ -86,6 +118,14 @@ class Motor {
             return _status();
         }
 
+        int currentPercent() {
+            return _currentPercent();
+        }
+
+        void moveToPercent(int percent){
+            return _moveToPercent(percent);
+        }
+
         void open() {
             return _open();
         }
@@ -95,10 +135,12 @@ class Motor {
         }
 };
 
+
 extern "C" {
     Motor* Motor_new() { return new Motor(); }
     bool Motor_status(Motor* motor) { return motor -> status(); }
+    int Motor_currentPercent(Motor* motor) { return motor -> currentPercent(); }
+    void Motor_moveToPercent(Motor* motor, int percent) { motor -> moveToPercent(percent); }
     void Motor_open(Motor* motor) { motor -> open(); }
     void Motor_close(Motor* motor) { motor -> close(); }
 }
-

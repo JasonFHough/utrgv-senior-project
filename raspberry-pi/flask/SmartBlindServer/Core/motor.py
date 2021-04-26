@@ -16,8 +16,14 @@ class Motor:
     def status(self) -> bool:
         return True if lib.Motor_status(self.obj) == 1 else False
 
+    def get_current_percent(self) -> int:
+        return lib.Motor_currentPercent(self.obj)
+
     def open(self) -> None:
         lib.Motor_open(self.obj)
 
     def close(self) -> None:
         lib.Motor_close(self.obj)
+    
+    def move_to_percent(self, percent) -> None:
+        lib.Motor_moveToPercent(self.obj, percent)

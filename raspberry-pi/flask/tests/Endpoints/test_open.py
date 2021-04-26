@@ -1,20 +1,8 @@
 from SmartBlindServer.Core.motor import Motor
+from fake_clib import FakeCLib
 from unittest import TestCase, mock
 from unittest.mock import Mock, patch
 
-# A class to mimic the structure of what cdll.LoadLibrary(libmotor.so) would contain
-class FakeCLib():
-    def Motor_new(self):
-        pass
-
-    def Motor_status(self, obj):
-        pass
-    
-    def Motor_open(self, obj):
-        pass
-
-    def Motor_close(self, obj):
-        pass
 
 class TestOpenEndpoint(TestCase):
     def setUp(self):
