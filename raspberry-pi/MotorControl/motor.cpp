@@ -23,7 +23,7 @@ using namespace std;
 //  1000 = counter-clockwise
 
 class Motor {
-	private:
+    private:
         bool isOpen = false;        // Start off with a closed blind
 	    int currentPercentage = 0;  // Start off with a closed 0%
 
