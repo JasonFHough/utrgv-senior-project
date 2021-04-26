@@ -6,7 +6,7 @@ The Python package containing the Flask RESTful API logic that is utilized by th
 1. `export FLASK_APP=SmartBlindServer.app:main`
 2. `export FLASK_ENV=development`
 
-## Starting the Server
+## Starting the Server (without nginx)
 
 1. `flask run`
 
@@ -19,3 +19,5 @@ The Python package containing the Flask RESTful API logic that is utilized by th
 - GET `/api/v1/blind/status`
 - PUT `/api/v1/blind/open`
 - PUT `/api/v1/blind/close`
+- GET `/api/v1/blind/percent`
+- PUT `/api/v1/blind/percent?percentage=50`
