@@ -5,10 +5,6 @@ import 'package:mobile_app/utils/apiData.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:mobile_app/config/globals.dart';
 
-//will change later to false since it needs to first get the status and then declare itself true or false
-bool isPoweredOn = false, isOnline = false;
-String openedBlinds = 'https://cdn.discordapp.com/attachments/780477496797036575/816409571597484062/unknown.png',
-      closedBlinds = 'https://cdn.discordapp.com/attachments/780477496797036575/816409670041600000/unknown.png';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,8 +13,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ApiEndpoints api = ApiEndpoints();
-
-  bool doCallAPI = false;
 
   @override
   void initState() {
@@ -33,10 +27,19 @@ class _HomePageState extends State<HomePage> {
     // Update status based on result
     statusFuture.then((value) {
       if(value == "open") {
-        api.currentStatus = BlindStatusStates.Open;
+        setState(() {
+          api.currentStatus = BlindStatusStates.Open;
+        });
       } else {
-        api.currentStatus = BlindStatusStates.Closed;
+        setState(() {
+          api.currentStatus = BlindStatusStates.Closed;
+        });
       }
+    }).catchError((exception) {
+      print(exception);
+      setState(() {
+        api.currentStatus = BlindStatusStates.Failure;
+      });
     });
   }
 
@@ -61,6 +64,11 @@ class _HomePageState extends State<HomePage> {
             api.currentStatus = BlindStatusStates.Closed;
           });
         }
+      }).catchError((exception) {
+        print(exception);
+        setState(() {
+          api.currentStatus = BlindStatusStates.Failure;
+        });
       });
     } else {
       // Send request to open
@@ -82,51 +90,38 @@ class _HomePageState extends State<HomePage> {
             api.currentStatus = BlindStatusStates.Closed;
           });
         }
+      }).catchError((exception) {
+        print(exception);
+        setState(() {
+          api.currentStatus = BlindStatusStates.Failure;
+        });
       });
     }
   }
 
   String getStateText() {
-    if(api.currentStatus == BlindStatusStates.Open) {
-      return "open";
-    } else if(api.currentStatus == BlindStatusStates.InProgress) {
-      return "working on it...";
-    } else {
-      return "closed";
+    switch(api.currentStatus) {
+      case BlindStatusStates.Open: {
+        return "open";
+      }
+      break;
+
+      case BlindStatusStates.InProgress: {
+        return "working on it...";
+      }
+      break;
+
+      case BlindStatusStates.Closed: {
+        return "closed";
+      }
+      break;
+
+      case BlindStatusStates.Failure: {
+        return "failed - try again";
+      }
+      break;
     }
   }
-
-  /*
-  void _toggleBlindStatus() {
-    //check to see if its open or closed
-    //call open/close endpoint for blinds
-    //update UI, if request was successful
-
-    print("in toggle");
-    ApiEndpoints.getStatus().then((fetchedStatusFuture) {
-      print("in getStatus");
-      String currentStatus = fetchedStatusFuture.status;
-      if (currentStatus == "open") {
-        // Call close endpoint
-        ApiEndpoints.closeBlinds().then((toggleFuture) {
-          print("in close");
-          setState(() {
-            isPoweredOn = false;
-            doCallAPI = false;
-          });
-        });
-      } else if (currentStatus == "closed") {
-        // Call open endpoint
-        ApiEndpoints.openBlinds().then((toggleFuture) {
-         print("in open");
-          setState(() {
-            isPoweredOn = true;
-            doCallAPI = false;
-          });
-        });
-      }});
-  }
-  */
 
   //slider widget  
   SleekCircularSlider slider1 = SleekCircularSlider(
@@ -159,13 +154,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("SmartBlinds"),
         backgroundColor: Colors.grey[850],
         elevation: 4.0,
-        actions: [
-          IconButton(
-            icon: isOnline ? Icon(Icons.public, color: Colors.green, size: 20)
-            : Icon(Icons.public_off,color: Colors.red, size: 20), 
-            onPressed: null,
-          )
-        ]
+        actions: []
       ),
       body: Container(
         child: Column(
@@ -176,7 +165,7 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: api.currentStatus == BlindStatusStates.Open ? NetworkImage(openedBlinds) : NetworkImage(closedBlinds),
+                    image: AssetImage(api.currentStatus == BlindStatusStates.Open ? "assets/opened.png" : "assets/closed.png"),
                     fit: BoxFit.scaleDown
                   )
                 )
@@ -196,12 +185,6 @@ class _HomePageState extends State<HomePage> {
                     child: IconButton(
                       onPressed: () {
                         toggleBlind();
-                        /*
-                        setState(() {
-                          doCallAPI = true;
-                        });
-                        _toggleBlindStatus();
-                        */
                       },
                       icon: Icon(Icons.power_settings_new),
                       color: api.currentStatus == BlindStatusStates.Open ? Colors.green : Colors.red,
@@ -212,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                     height: 38,
                     child: api.currentStatus == BlindStatusStates.Open
                       ? Text('Open', style: TextStyle(fontSize: 40, color: Colors.green))
-                      : Text('Closed', style: TextStyle(fontSize: 40, color: Colors.red))
+                      : Text('${getStateText()}', style: TextStyle(fontSize: 40, color: Colors.red))
                   )
                 ]
               )
@@ -222,8 +205,6 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget> [
-                  // Text("Status: ${status.status}",
-                  // Text("${status.status}",
                   Text(
                     "${getStateText()}",
                     style: TextStyle(fontSize: 30, color: Colors.blue)
@@ -235,36 +216,5 @@ class _HomePageState extends State<HomePage> {
         )
       )
     );
-              /*
-              FutureBuilder(
-                future: statusFuture,
-                builder:
-                    (BuildContext context, AsyncSnapshot<Status> snapshot) {
-                  if (snapshot.hasData) {
-                    Status status = snapshot.data;
-                    isOnline = true;
-                    return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          //Text("Status: ${status.status}",
-                          // Text("${status.status}",
-                          Text("Status should go here",
-                              style:
-                                  TextStyle(fontSize: 30, color: Colors.blue))
-                        ]);
-                  } else {
-                    isOnline = false;
-                    return Center(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                          CircularProgressIndicator(),
-                          // SizedBox(width: 20.0),
-                          // Text("Fetching status...",
-                          //     style:
-                          //         TextStyle(fontSize: 30, color: Colors.blue))
-                        ]));
-                  }}))])));
-              */
   }
 }

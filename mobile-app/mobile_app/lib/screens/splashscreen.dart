@@ -38,5 +38,9 @@ class _SplashScreenState extends State<SplashScreen> {
             // Image.asset('assets/Smart_Bliends_transparent.jpg')
             Image.asset('assets/SmartBlindsLogo.gif')
             //Smart_Bliends_transparent.jpg
-          ])));
-  }}
+          ]
+        )
+      )
+    );
+  }
+}
