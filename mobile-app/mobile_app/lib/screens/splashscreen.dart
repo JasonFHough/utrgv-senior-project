@@ -78,10 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Image.asset('assets/Smart_Bliends.jpg')
-            // Image.asset('assets/Smart_Bliends_transparent.jpg')
             Image.asset('assets/SmartBlindsLogo2.gif')
-            //Smart_Bliends_transparent.jpg
           ]
         )
       )

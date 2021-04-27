@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
       break;
 
       case BlindStatusStates.InProgress: {
+        //return "assets/loading.gif"; 
         return "assets/SmartBlindsTransparent.png";  // make into loading gif
       }
       break;
@@ -46,11 +47,13 @@ class _HomePageState extends State<HomePage> {
 
       case BlindStatusStates.Failure: {
         return "assets/noConnection.jpg";
+        //return "assets/loading.gif";
       }
       break;
 
       default: {
-        return "assets/SmartBlinds.png"; // make into loading gif
+        //return "assets/loading.gif";
+        return "assets/SmartBlinds.png";  // make into loading gif
       }
       break;
     }
@@ -239,7 +242,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.grey[600],
       appBar: AppBar(
-        title: Text("SmartBlinds"),
+        title: Text("SmartBlinds", textAlign: TextAlign.center),
         backgroundColor: Colors.grey[850],
         elevation: 4.0,
         actions: [ setStatusIcon()
@@ -250,7 +253,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              flex: 5,
+              flex: 4,
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -290,7 +293,7 @@ class _HomePageState extends State<HomePage> {
                     )
                   ),
                   Container(
-                    height: 115,
+                    height: 100,
                     child: IconButton(
                       onPressed: () {
                         toggleBlind();
@@ -300,26 +303,17 @@ class _HomePageState extends State<HomePage> {
                       iconSize: 80
                     ),
                   ),
-                  Container(
-                    height: 38,
-                    child: widget.api.currentStatus == BlindStatusStates.Open
-                      ? Text('Open', style: TextStyle(fontSize: 40, color: Colors.green))
-                      : Text('${getStateText()}', style: TextStyle(fontSize: 40, color: Colors.red))
-                  )
                 ]
               )
             ),
             Expanded(
-              flex: 2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget> [
-                  Text(
-                    "${getStateText()}",
-                    style: TextStyle(fontSize: 30, color: Colors.blue)
+              flex: 1,
+              child: Container(
+                    height: 40,
+                    child: widget.api.currentStatus == BlindStatusStates.Open
+                      ? Text('Open', style: TextStyle(fontSize: 35, color: Colors.green))
+                      : Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.red))
                   )
-                ]
-              )
             )
           ]
         )
