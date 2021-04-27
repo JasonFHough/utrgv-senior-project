@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/screens/home_page.dart';
 import 'package:mobile_app/screens/splashscreen.dart';
+import 'package:mobile_app/utils/apiData.dart';
 
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  ApiEndpoints api = ApiEndpoints();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SplashScreen(),
+      home: SplashScreen(api),
     );
   }
 }
