@@ -35,6 +35,7 @@ class Motor {
 
         // seconds - number of seconds to rotate before stopping
         void rotateClockwise(double seconds) {
+            // Start moving the motor clockwise, wait seconds, then stop the motor
             gpioServo(CONTROL_PIN, CLOCKWISE_WIDTH);
             time_sleep(seconds);
             stopMotor();
@@ -42,12 +43,14 @@ class Motor {
 
         // seconds - number of seconds to rotate before stopping
         void rotateCounterClockwise(double seconds) {
+            // Start moving the motor counter clockwise, wait seconds, then stop the motor
             gpioServo(CONTROL_PIN, COUNTER_CLOCKWISE_WIDTH);
             time_sleep(seconds);
             stopMotor();
         }
 
         void stopMotor() {
+            // Set the width to 0 to stop the motor from rotating
             gpioServo(CONTROL_PIN, 0);
         }
 
