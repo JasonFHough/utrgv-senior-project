@@ -18,8 +18,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // getCurrentStatus();
-    // getCurrentPercent();
+    
+    // In the event the status and percents failed to load
+    // during the splash screen, try one more time
+    if(widget.api.currentStatus == BlindStatusStates.Failure) {
+      getCurrentStatus();
+      getCurrentPercent();
+    }
   }
 
   String setBackgroundText() {
