@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_app/utils/apiData.dart';
 import 'package:mobile_app/config/globals.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+//import 'package:mobile_app/utils/functions.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -35,8 +36,8 @@ class _HomePageState extends State<HomePage> {
       break;
 
       case BlindStatusStates.InProgress: {
-        //return "assets/loading.gif"; 
-        return "assets/SmartBlindsTransparent.png";  // make into loading gif
+        return "assets/loading.gif"; 
+        //return "assets/SmartBlindsTransparent.png";  // make into loading gif
       }
       break;
 
@@ -52,8 +53,8 @@ class _HomePageState extends State<HomePage> {
       break;
 
       default: {
-        //return "assets/loading.gif";
-        return "assets/SmartBlinds.png";  // make into loading gif
+        return "assets/loading.gif";
+        //return "assets/SmartBlinds.png";  // make into loading gif
       }
       break;
     }
@@ -192,46 +193,94 @@ class _HomePageState extends State<HomePage> {
   String getStateText() {
     switch(widget.api.currentStatus) {
       case BlindStatusStates.Open: {
-        return "open";
+        return "Open";
       }
       break;
 
       case BlindStatusStates.InProgress: {
-        return "working on it...";
+        return "Working on it...";
       }
       break;
 
       case BlindStatusStates.Closed: {
-        return "closed";
+        return "Closed";
       }
       break;
 
       case BlindStatusStates.Failure: {
-        return "failed - try again";
+        return "Offline - Try again";
       }
       break;
     }
   }
 
-  IconButton setStatusIcon() {
+  Text setStatusText() {
     switch(widget.api.currentStatus) {
       case BlindStatusStates.Open: {
-        return IconButton(icon: Icon(Icons.public, color: Colors.green, size: 20));
+        return Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.green));
       }
       break;
 
       case BlindStatusStates.InProgress: {
-        return IconButton(icon: Icon(Icons.hourglass_empty_outlined, color: Colors.blue, size: 20));
+        return Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.blue));
       }
       break;
 
       case BlindStatusStates.Closed: {
-        return IconButton(icon: Icon(Icons.public, color: Colors.green, size: 20));
+        return Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.red));
       }
       break;
 
       case BlindStatusStates.Failure: {
-        return IconButton(icon: Icon(Icons.public_off, color: Colors.red, size: 20));
+        return Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.red[900]));
+      }
+      break;
+    }
+  }
+
+  Color setStatusButtonColor() {
+    switch(widget.api.currentStatus) {
+      case BlindStatusStates.Open: {
+        return Colors.green;
+      }
+      break;
+
+      case BlindStatusStates.InProgress: {
+        return Colors.blue;
+      }
+      break;
+
+      case BlindStatusStates.Closed: {
+        return Colors.red;
+      }
+      break;
+
+      case BlindStatusStates.Failure: {
+        return Colors.red[900];
+      }
+      break;
+    }
+  }
+
+  IconButton setAppbarStatusIcon() {
+    switch(widget.api.currentStatus) {
+      case BlindStatusStates.Open: {
+        return IconButton(icon: Icon(Icons.public, color: Colors.green, size: 20), onPressed: null);
+      }
+      break;
+
+      case BlindStatusStates.InProgress: {
+        return IconButton(icon: Icon(Icons.hourglass_empty_outlined, color: Colors.blue, size: 20), onPressed: null);
+      }
+      break;
+
+      case BlindStatusStates.Closed: {
+        return IconButton(icon: Icon(Icons.public, color: Colors.green, size: 20), onPressed: null);
+      }
+      break;
+
+      case BlindStatusStates.Failure: {
+        return IconButton(icon: Icon(Icons.public_off, color: Colors.red, size: 20), onPressed: null);
       }
       break;
     }
@@ -245,7 +294,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("SmartBlinds", textAlign: TextAlign.center),
         backgroundColor: Colors.grey[850],
         elevation: 4.0,
-        actions: [ setStatusIcon()
+        actions: [ setAppbarStatusIcon()
         ]
       ),
       body: Container(
@@ -299,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                         toggleBlind();
                       },
                       icon: Icon(Icons.power_settings_new),
-                      color: widget.api.currentStatus == BlindStatusStates.Open ? Colors.green : Colors.red,
+                      color: setStatusButtonColor(),
                       iconSize: 80
                     ),
                   ),
@@ -310,9 +359,7 @@ class _HomePageState extends State<HomePage> {
               flex: 1,
               child: Container(
                     height: 40,
-                    child: widget.api.currentStatus == BlindStatusStates.Open
-                      ? Text('Open', style: TextStyle(fontSize: 35, color: Colors.green))
-                      : Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.red))
+                    child: setStatusText()
                   )
             )
           ]

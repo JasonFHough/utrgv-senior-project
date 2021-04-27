@@ -66,7 +66,8 @@ class ApiEndpoints {
 
   static Future<String> moveToPercentage(http.Client client, int newPercent) async {
     var queryParameters = {
-      "percentage": newPercent
+      //changed from {"percentage": newPercent} to {"percentage": newPercent.toString()}
+      "percentage": newPercent.toString() 
     };
     var uri = Uri.https(percent, "", queryParameters);
     var response = await http.put(uri, headers: {

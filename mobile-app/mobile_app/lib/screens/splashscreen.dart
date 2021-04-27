@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/SmartBlindsLogo2.gif')
+            Image.asset('assets/SmartBlindsLogoCropped.gif')
           ]
         )
       )
