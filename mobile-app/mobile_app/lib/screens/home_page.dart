@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:mobile_app/api_models/status.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/utils/apiData.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:mobile_app/config/globals.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 
 class HomePage extends StatefulWidget {
