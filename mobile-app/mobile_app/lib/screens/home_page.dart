@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
         break;
 
         case BlindStatusStates.Failure: {
-          _blindImagePath = "assets/noConnection.jpg";
+          _blindImagePath = "assets/noConnection2.png";
         }
         break;
 
