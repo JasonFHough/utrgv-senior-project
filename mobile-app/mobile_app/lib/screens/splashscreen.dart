@@ -71,15 +71,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    //backgroundColor: Color(0xffFFFFFF),
-    backgroundColor: Color(0xff000000),
-    //backgroundColor: Color(0xff696969), //dimgrey
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset('assets/SmartBlindsLogoCropped.gif')
-        ]
+      //backgroundColor: Color(0xffFFFFFF),
+      backgroundColor: Color(0xff000000),
+      //backgroundColor: Color(0xff696969), //dimgrey
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/SmartBlindsLogoCropped.gif')
+          ]
+        )
       )
     );
   }
