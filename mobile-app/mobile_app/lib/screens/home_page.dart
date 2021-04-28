@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
 
   void moveToPercentage(int percent) {
       // Send request to move to percent
-      Future<String> openFuture = ApiEndpoints.moveToPercentage(httpClient, percent);
+      Future<String> moveToPercentageFuture = ApiEndpoints.moveToPercentage(httpClient, percent);
 
       // Update status to in progress
       setState(() {
@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
       });
 
       // Update status based on result
-      openFuture.then((value) {
+      moveToPercentageFuture.then((value) {
         if(value == "opened") {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Open;
@@ -332,12 +332,14 @@ class _HomePageState extends State<HomePage> {
                           shadowColor: Colors.white,
                           shadowStep: 5
                         ),
-                        size: 250
+                        size: 250,
+                        infoProperties: InfoProperties(
+                          topLabelText: "testing"
+                        )
                       ),
                       initialValue: widget.api.currentPercentage == null ? 0 : widget.api.currentPercentage.toDouble(),
                       onChangeEnd: (double value) {
-                        //PENDING: Sending Value to API
-                        print(value);
+                        moveToPercentage(value.toInt());
                       }
                     )
                   ),
