@@ -16,16 +16,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  double _sliderValue;
+  // NOTE: To make the background image seem fluid during sliding the slider,
+  // use a string variable representing the image path to show and then have it
+  // update in onChange.
+
   @override
   void initState() {
     super.initState();
-    
+
     // In the event the status and percents failed to load
     // during the splash screen, try one more time
     if(widget.api.currentStatus == BlindStatusStates.Failure) {
       getCurrentStatus();
       getCurrentPercent();
     }
+
+    _sliderValue = widget.api.currentPercentage.toDouble();
   }
 
   String setBackgroundText() {
@@ -164,12 +171,14 @@ class _HomePageState extends State<HomePage> {
     percentFuture.then((value) {
       setState(() {
         widget.api.currentPercentage = value;
+        _sliderValue = value.toDouble();
       });
     }).catchError((exception) {
       print(exception);
       setState(() {
         widget.api.currentStatus = BlindStatusStates.Failure;
         widget.api.currentPercentage = 0;
+        _sliderValue = 0.0;
       });
     });
   }
@@ -212,16 +221,22 @@ class _HomePageState extends State<HomePage> {
         if(value == "opened") {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Open;
+            widget.api.currentPercentage = 50;
+            _sliderValue = widget.api.currentPercentage.toDouble();
           });
         } else {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Closed;
+            widget.api.currentPercentage = 0;
+            _sliderValue = widget.api.currentPercentage.toDouble();
           });
         }
       }).catchError((exception) {
         print(exception);
         setState(() {
           widget.api.currentStatus = BlindStatusStates.Failure;
+          widget.api.currentPercentage = 0;
+          _sliderValue = widget.api.currentPercentage.toDouble();
         });
       });
     } else {
@@ -238,16 +253,22 @@ class _HomePageState extends State<HomePage> {
         if(value == "opened") {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Open;
+            widget.api.currentPercentage = 50;
+            _sliderValue = widget.api.currentPercentage.toDouble();
           });
         } else {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Closed;
+            widget.api.currentPercentage = 0;
+            _sliderValue = widget.api.currentPercentage.toDouble();
           });
         }
       }).catchError((exception) {
         print(exception);
         setState(() {
           widget.api.currentStatus = BlindStatusStates.Failure;
+          widget.api.currentPercentage = 0;
+          _sliderValue = widget.api.currentPercentage.toDouble();
         });
       });
     }
@@ -277,11 +298,13 @@ class _HomePageState extends State<HomePage> {
       // Update current percentage
       setState(() {
         widget.api.currentPercentage = percent;
+        _sliderValue = percent.toDouble();
       });
     }).catchError((exception) {
       print(exception);
       setState(() {
         widget.api.currentStatus = BlindStatusStates.Failure;
+        _sliderValue = widget.api.currentPercentage.toDouble();
       });
     });
   }
@@ -294,10 +317,83 @@ class _HomePageState extends State<HomePage> {
         title: Text("SmartBlinds", textAlign: TextAlign.center),
         backgroundColor: Colors.grey[850],
         elevation: 4.0,
-        actions: [ setAppbarStatusIcon()
-        ]
+        actions: [setAppbarStatusIcon()]
       ),
-      body: Container(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Row(
+              children: <Widget> [
+                Expanded(
+                  flex: 2,
+                  child: RotatedBox(
+                    quarterTurns: 3,
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: Colors.red[700],
+                        inactiveTrackColor: Colors.red[100],
+                        trackShape: RectangularSliderTrackShape(),
+                        trackHeight: 4.0,
+                        thumbColor: Colors.redAccent,
+                        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                        overlayColor: Colors.red.withAlpha(32),
+                        overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+                      ),
+                      child: Slider(
+                        value: _sliderValue,
+                        min: 0,
+                        max: 100,
+                        label: '${_sliderValue.round()} %',
+                        onChanged: (double newValue) {
+                          setState(() {
+                            _sliderValue = newValue;
+                          });
+                        },
+                        onChangeEnd: (double newValue) {
+                          moveToPercentage(newValue.round());
+                        }
+                      ),
+                    ),
+                  )
+                ),
+                Expanded(
+                  flex: 8,
+                  child: Image.asset(setBackgroundText(), fit: BoxFit.scaleDown)
+                )
+              ]
+            ),
+            Builder(
+              builder: (BuildContext context) {
+                // If status is currently in progress, display a progress indicator
+                if(widget.api.currentStatus == BlindStatusStates.InProgress) {
+                  return CircularProgressIndicator();
+                } else {
+                  return Container();
+                }
+              }
+            ),
+            Container(
+              height: 100,
+              child: IconButton(
+                onPressed: () {
+                  toggleBlind();
+                },
+                icon: Icon(Icons.power_settings_new),
+                color: setStatusButtonColor(),
+                iconSize: 80
+              ),
+            ),
+            Container(
+              height: 40,
+              child: setStatusText()
+            )
+          ]
+        )
+      )
+      
+      /*
+      Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -377,6 +473,7 @@ class _HomePageState extends State<HomePage> {
           ]
         )
       )
+      */
     );
   }
 }
