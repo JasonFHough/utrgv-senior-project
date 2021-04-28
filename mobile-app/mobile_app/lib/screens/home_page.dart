@@ -60,6 +60,102 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  String setStateText() {
+    switch(widget.api.currentStatus) {
+      case BlindStatusStates.Open: {
+        return "Open";
+      }
+      break;
+
+      case BlindStatusStates.InProgress: {
+        return "Working on it...";
+      }
+      break;
+
+      case BlindStatusStates.Closed: {
+        return "Closed";
+      }
+      break;
+
+      case BlindStatusStates.Failure: {
+        return "Offline - Try again";
+      }
+      break;
+    }
+  }
+
+  Text setStatusText() {
+    switch(widget.api.currentStatus) {
+      case BlindStatusStates.Open: {
+        return Text('${setStateText()}', style: TextStyle(fontSize: 35, color: Colors.green));
+      }
+      break;
+
+      case BlindStatusStates.InProgress: {
+        return Text('${setStateText()}', style: TextStyle(fontSize: 35, color: Colors.blue));
+      }
+      break;
+
+      case BlindStatusStates.Closed: {
+        return Text('${setStateText()}', style: TextStyle(fontSize: 35, color: Colors.red));
+      }
+      break;
+
+      case BlindStatusStates.Failure: {
+        return Text('${setStateText()}', style: TextStyle(fontSize: 35, color: Colors.red[900]));
+      }
+      break;
+    }
+  }
+
+  Color setStatusButtonColor() {
+    switch(widget.api.currentStatus) {
+      case BlindStatusStates.Open: {
+        return Colors.green;
+      }
+      break;
+
+      case BlindStatusStates.InProgress: {
+        return Colors.blue;
+      }
+      break;
+
+      case BlindStatusStates.Closed: {
+        return Colors.red;
+      }
+      break;
+
+      case BlindStatusStates.Failure: {
+        return Colors.red[900];
+      }
+      break;
+    }
+  }
+
+  IconButton setAppbarStatusIcon() {
+    switch(widget.api.currentStatus) {
+      case BlindStatusStates.Open: {
+        return IconButton(icon: Icon(Icons.public, color: Colors.green, size: 20), onPressed: null);
+      }
+      break;
+
+      case BlindStatusStates.InProgress: {
+        return IconButton(icon: Icon(Icons.hourglass_empty_outlined, color: Colors.blue, size: 20), onPressed: null);
+      }
+      break;
+
+      case BlindStatusStates.Closed: {
+        return IconButton(icon: Icon(Icons.public, color: Colors.green, size: 20), onPressed: null);
+      }
+      break;
+
+      case BlindStatusStates.Failure: {
+        return IconButton(icon: Icon(Icons.public_off, color: Colors.red, size: 20), onPressed: null);
+      }
+      break;
+    }
+  }
+
   void getCurrentPercent() {
     // Send request to get current percent
     Future<int> percentFuture = ApiEndpoints.getPercent(httpClient);
@@ -158,132 +254,36 @@ class _HomePageState extends State<HomePage> {
   }
 
   void moveToPercentage(int percent) {
-      // Send request to move to percent
-      Future<String> moveToPercentageFuture = ApiEndpoints.moveToPercentage(httpClient, percent);
+    // Send request to move to percent
+    Future<String> moveToPercentageFuture = ApiEndpoints.moveToPercentage(httpClient, percent);
 
-      // Update status to in progress
+    // Update status to in progress
+    setState(() {
+      widget.api.currentStatus = BlindStatusStates.InProgress;
+    });
+
+    // Update status based on result
+    moveToPercentageFuture.then((value) {
+      if(value == "opened") {
+        setState(() {
+          widget.api.currentStatus = BlindStatusStates.Open;
+        });
+      } else {
+        setState(() {
+          widget.api.currentStatus = BlindStatusStates.Closed;
+        });
+      }
+
+      // Update current percentage
       setState(() {
-        widget.api.currentStatus = BlindStatusStates.InProgress;
+        widget.api.currentPercentage = percent;
       });
-
-      // Update status based on result
-      moveToPercentageFuture.then((value) {
-        if(value == "opened") {
-          setState(() {
-            widget.api.currentStatus = BlindStatusStates.Open;
-          });
-        } else {
-          setState(() {
-            widget.api.currentStatus = BlindStatusStates.Closed;
-          });
-        }
-
-        // Update current percentage
-        setState(() {
-          widget.api.currentPercentage = percent;
-        });
-      }).catchError((exception) {
-        print(exception);
-        setState(() {
-          widget.api.currentStatus = BlindStatusStates.Failure;
-        });
+    }).catchError((exception) {
+      print(exception);
+      setState(() {
+        widget.api.currentStatus = BlindStatusStates.Failure;
       });
-  }
-
-  String getStateText() {
-    switch(widget.api.currentStatus) {
-      case BlindStatusStates.Open: {
-        return "Open";
-      }
-      break;
-
-      case BlindStatusStates.InProgress: {
-        return "Working on it...";
-      }
-      break;
-
-      case BlindStatusStates.Closed: {
-        return "Closed";
-      }
-      break;
-
-      case BlindStatusStates.Failure: {
-        return "Offline - Try again";
-      }
-      break;
-    }
-  }
-
-  Text setStatusText() {
-    switch(widget.api.currentStatus) {
-      case BlindStatusStates.Open: {
-        return Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.green));
-      }
-      break;
-
-      case BlindStatusStates.InProgress: {
-        return Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.blue));
-      }
-      break;
-
-      case BlindStatusStates.Closed: {
-        return Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.red));
-      }
-      break;
-
-      case BlindStatusStates.Failure: {
-        return Text('${getStateText()}', style: TextStyle(fontSize: 35, color: Colors.red[900]));
-      }
-      break;
-    }
-  }
-
-  Color setStatusButtonColor() {
-    switch(widget.api.currentStatus) {
-      case BlindStatusStates.Open: {
-        return Colors.green;
-      }
-      break;
-
-      case BlindStatusStates.InProgress: {
-        return Colors.blue;
-      }
-      break;
-
-      case BlindStatusStates.Closed: {
-        return Colors.red;
-      }
-      break;
-
-      case BlindStatusStates.Failure: {
-        return Colors.red[900];
-      }
-      break;
-    }
-  }
-
-  IconButton setAppbarStatusIcon() {
-    switch(widget.api.currentStatus) {
-      case BlindStatusStates.Open: {
-        return IconButton(icon: Icon(Icons.public, color: Colors.green, size: 20), onPressed: null);
-      }
-      break;
-
-      case BlindStatusStates.InProgress: {
-        return IconButton(icon: Icon(Icons.hourglass_empty_outlined, color: Colors.blue, size: 20), onPressed: null);
-      }
-      break;
-
-      case BlindStatusStates.Closed: {
-        return IconButton(icon: Icon(Icons.public, color: Colors.green, size: 20), onPressed: null);
-      }
-      break;
-
-      case BlindStatusStates.Failure: {
-        return IconButton(icon: Icon(Icons.public_off, color: Colors.red, size: 20), onPressed: null);
-      }
-      break;
-    }
+    });
   }
 
   @override
@@ -311,6 +311,16 @@ class _HomePageState extends State<HomePage> {
                   )
                 )
               )
+            ),
+            Builder(
+              builder: (BuildContext context) {
+                // If status is currently in progress, display a progress indicator
+                if(widget.api.currentStatus == BlindStatusStates.InProgress) {
+                  return CircularProgressIndicator();
+                } else {
+                  return Container();
+                }
+              }
             ),
             Expanded(
               flex: 4,
@@ -360,9 +370,9 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               flex: 1,
               child: Container(
-                    height: 40,
-                    child: setStatusText()
-                  )
+                height: 40,
+                child: setStatusText()
+              )
             )
           ]
         )

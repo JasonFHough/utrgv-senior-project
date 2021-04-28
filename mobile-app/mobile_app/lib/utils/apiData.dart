@@ -65,11 +65,6 @@ class ApiEndpoints {
   }
 
   static Future<String> moveToPercentage(http.Client client, int newPercent) async {
-    // var queryParameters = {
-    //   //changed from {"percentage": newPercent} to {"percentage": newPercent.toString()}
-    //   "percentage": newPercent.toString() 
-    // };
-    // var uri = Uri.http(percent, , queryParameters);
     var response = await http.put(Uri.encodeFull("${percent}?percentage=${newPercent}"), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer jason-token'
