@@ -31,3 +31,7 @@ Create a system in which a mobile app remotely controls a Raspberry Pi connected
 ## Visual Overview
 
 ![Low Fidelity Project Overview Image](./CSCI%204390%20-%20Low%20Fidelity%20Project%20Overview%20Mock-up.jpg)
+
+## Raspberry Pi and Servo Motor Schematic
+
+![Raspberry Pi and Servo Motor Schematic](./CSCI%204390%20-%20Raspberry%20Pi%20and%20Servo%20Schematic.png)
