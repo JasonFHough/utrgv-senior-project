@@ -14,7 +14,7 @@ make -C MotorControl
 
 # Ensure Python Flask API has all dependencies installed
 pip install -r flask/requirements.txt
-sudo /home/$(whoami)./.pyenv/shims/pip uninstall SmartBlindServer -y && sudo /home/$(whoami)./.pyenv/shims/pip install flask/
+sudo /home/$(whoami)/.pyenv/shims/pip uninstall SmartBlindServer -y && sudo /home/$(whoami)/.pyenv/shims/pip install flask/
 
 # ---- NGINX ----
 
