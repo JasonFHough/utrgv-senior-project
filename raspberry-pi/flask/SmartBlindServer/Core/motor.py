@@ -3,7 +3,7 @@ from ctypes import cdll
 
 lib = None
 if os.path.exists("../MotorControl/libmotor.so"):
-    lib = cdll.LoadLibrary("../MotorControl/libmotor.so")           # For docker
+    lib = cdll.LoadLibrary("../MotorControl/libmotor.so")
 elif os.path.exists("../../../MotorControl/libmotor.so"):
     lib = cdll.LoadLibrary("../../../MotorControl/libmotor.so")     # For local testing if running motor.py in it's own directory
 elif os.path.exists("./MotorControl/libmotor.so"):

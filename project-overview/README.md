@@ -6,27 +6,27 @@ Create a system in which a mobile app remotely controls a Raspberry Pi connected
 
 ## MVP Requirements
 
-- [ ] Mobile App
-  - [ ] Display the current state of the window blind
-  - [ ] Create a single button that toggles the current state of the window blind by sending HTTP requests
-- [ ] Raspberry Pi
+- [x] Mobile App
+  - [x] Display the current state of the window blind
+  - [x] Create a single button that toggles the current state of the window blind by sending HTTP requests
+- [x] Raspberry Pi
   - [x] Create a publicly accessible REST API server that interacts with the Raspberry Pi's GPIO
   - [x] Create a circuit to connect a motor to the Raspberry Pi
-  - [ ] Physically attach the motor to the window blind's turning rod to rotate the blinds
-  - [ ] Create REST API endpoints that operate the motor such that the window blind opens and closes
+  - [x] Physically attach the motor to the window blind's turning rod to rotate the blinds
+  - [x] Create REST API endpoints that operate the motor such that the window blind opens and closes
 
 ## Future Expansion
 
-- [ ] Mobile App
-  - [ ] Implement a seemless visual transition between the window blind open state to closed state, and vice versa.
-  - [ ] Display exact percentage of the window blind angle  
+- [x] Mobile App
+  - [x] Implement a seemless visual transition between the window blind open state to closed state, and vice versa.
+  - [x] Display exact percentage of the window blind angle  
   100% = completely open, 0% = completely closed
-  - [ ] Display other sensor data such as temperature, daytime/nightime, etc.
-- [ ] Raspberry Pi
-  - [ ] Provide an endpoint that returns the exact current position of the motor in percentage form  
+  - [ ] ~~Display other sensor data such as temperature, daytime/nightime, etc.~~ (change of plans)
+- [x] Raspberry Pi
+  - [x] Provide an endpoint that returns the exact current position of the motor in percentage form  
   100% = completely open, 0% = completely closed
-  - [ ] Containerize and/or automate the application for easy deployment
-  - [ ] Connect other sensor hardware to the circuit and expose their sensor readings to a REST API endpoint
+  - [x] Containerize and/or automate the application for easy deployment
+  - [ ] ~~Connect other sensor hardware to the circuit and expose their sensor readings to a REST API endpoint~~ (change of plans)
 
 ## Visual Overview
 
