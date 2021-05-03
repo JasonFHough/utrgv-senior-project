@@ -9,7 +9,7 @@ Create a system in which a mobile app remotely controls a Raspberry Pi connected
 - [x] Mobile App
   - [x] Display the current state of the window blind
   - [x] Create a single button that toggles the current state of the window blind by sending HTTP requests
-- [ ] Raspberry Pi
+- [x] Raspberry Pi
   - [x] Create a publicly accessible REST API server that interacts with the Raspberry Pi's GPIO
   - [x] Create a circuit to connect a motor to the Raspberry Pi
   - [x] Physically attach the motor to the window blind's turning rod to rotate the blinds
@@ -17,8 +17,8 @@ Create a system in which a mobile app remotely controls a Raspberry Pi connected
 
 ## Future Expansion
 
-- [ ] Mobile App
-  - [ ] Implement a seemless visual transition between the window blind open state to closed state, and vice versa.
+- [x] Mobile App
+  - [x] Implement a seemless visual transition between the window blind open state to closed state, and vice versa.
   - [x] Display exact percentage of the window blind angle  
   100% = completely open, 0% = completely closed
   - [ ] ~~Display other sensor data such as temperature, daytime/nightime, etc.~~ (change of plans)
