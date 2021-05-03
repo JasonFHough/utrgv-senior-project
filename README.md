@@ -8,15 +8,13 @@ Mobile app files are stored in `mobile-app/`
 
 ## Installation
 
-TBA
-
-## Environment Setup
-
-TBA
+1. Configure Raspberry Pi
+   - Follow `rasperry-pi/README.md` instructions
+2. Install Mobile App from directory `mobile-app/mobile-app/`
 
 ## Usage
 
-TBA
+Use the mobile app to toggle a blind between the opened/closed state, or specify the exact percentage for the blind.
 
 ## Group Members
  - Jason Hough
