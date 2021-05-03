@@ -16,48 +16,59 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  double _sliderValue;
+  String _blindImagePath;
+  // NOTE: To make the background image seem fluid during sliding the slider,
+  // use a string variable representing the image path to show and then have it
+  // update in onChange.
+
   @override
   void initState() {
     super.initState();
-    
+
     // In the event the status and percents failed to load
     // during the splash screen, try one more time
     if(widget.api.currentStatus == BlindStatusStates.Failure) {
       getCurrentStatus();
       getCurrentPercent();
     }
+
+    _sliderValue = widget.api.currentPercentage.toDouble();
+    setBackgroundText();
   }
 
   String setBackgroundText() {
-    switch(widget.api.currentStatus) {
-      case BlindStatusStates.Open: {
-        return "assets/opened.png";
-      }
-      break;
+    setState(() {
+      switch(widget.api.currentStatus) {
+        case BlindStatusStates.Open: {
+          _blindImagePath = "assets/opened.png";
+        }
+        break;
 
-      case BlindStatusStates.InProgress: {
-        return "assets/loading.gif"; 
-        //return "assets/SmartBlindsTransparent.png";  // make into loading gif
-      }
-      break;
+        case BlindStatusStates.InProgress: {
+          // Don't change image unless for whatever reason there wasn't an image assigned previously
+          if(_blindImagePath == null) {
+            _blindImagePath = "assets/closed.png";
+          }
+        }
+        break;
 
-      case BlindStatusStates.Closed: {
-        return "assets/closed.png";
-      }
-      break;
+        case BlindStatusStates.Closed: {
+          _blindImagePath = "assets/closed.png";
+        }
+        break;
 
-      case BlindStatusStates.Failure: {
-        return "assets/noConnection.jpg";
-        //return "assets/loading.gif";
-      }
-      break;
+        case BlindStatusStates.Failure: {
+          _blindImagePath = "assets/noConnection3.png";
+        }
+        break;
 
-      default: {
-        return "assets/loading.gif";
-        //return "assets/SmartBlinds.png";  // make into loading gif
+        default: {
+          _blindImagePath = "assets/loading.gif";
+        }
+        break;
       }
-      break;
-    }
+    });
   }
 
   String setStateText() {
@@ -164,12 +175,14 @@ class _HomePageState extends State<HomePage> {
     percentFuture.then((value) {
       setState(() {
         widget.api.currentPercentage = value;
+        _sliderValue = value.toDouble();
       });
     }).catchError((exception) {
       print(exception);
       setState(() {
         widget.api.currentStatus = BlindStatusStates.Failure;
         widget.api.currentPercentage = 0;
+        _sliderValue = 0.0;
       });
     });
   }
@@ -189,11 +202,14 @@ class _HomePageState extends State<HomePage> {
           widget.api.currentStatus = BlindStatusStates.Closed;
         });
       }
+
+      setBackgroundText();
     }).catchError((exception) {
       print(exception);
       setState(() {
         widget.api.currentStatus = BlindStatusStates.Failure;
       });
+      setBackgroundText();
     });
   }
 
@@ -212,17 +228,25 @@ class _HomePageState extends State<HomePage> {
         if(value == "opened") {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Open;
+            widget.api.currentPercentage = 50;
           });
         } else {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Closed;
+            widget.api.currentPercentage = 0;
           });
         }
+
+        _sliderValue = widget.api.currentPercentage.toDouble();
+        setBackgroundText();
       }).catchError((exception) {
         print(exception);
         setState(() {
           widget.api.currentStatus = BlindStatusStates.Failure;
+          widget.api.currentPercentage = 0;
+          _sliderValue = widget.api.currentPercentage.toDouble();
         });
+        setBackgroundText();
       });
     } else {
       // Send request to open
@@ -238,17 +262,25 @@ class _HomePageState extends State<HomePage> {
         if(value == "opened") {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Open;
+            widget.api.currentPercentage = 50;
           });
         } else {
           setState(() {
             widget.api.currentStatus = BlindStatusStates.Closed;
+            widget.api.currentPercentage = 0;
           });
         }
+
+        _sliderValue = widget.api.currentPercentage.toDouble();
+        setBackgroundText();
       }).catchError((exception) {
         print(exception);
         setState(() {
           widget.api.currentStatus = BlindStatusStates.Failure;
+          widget.api.currentPercentage = 0;
+          _sliderValue = widget.api.currentPercentage.toDouble();
         });
+        setBackgroundText();
       });
     }
   }
@@ -274,16 +306,31 @@ class _HomePageState extends State<HomePage> {
         });
       }
 
+      setBackgroundText();
+
       // Update current percentage
       setState(() {
         widget.api.currentPercentage = percent;
+        _sliderValue = percent.toDouble();
       });
     }).catchError((exception) {
       print(exception);
       setState(() {
         widget.api.currentStatus = BlindStatusStates.Failure;
+        _sliderValue = widget.api.currentPercentage.toDouble();
+        setBackgroundText();
       });
     });
+  }
+
+  void sliderOnChangeAction(double newValue) {
+    setState(() {
+      _sliderValue = newValue;
+    });
+  }
+
+  void buttonOnPressedAction() {
+    toggleBlind();
   }
 
   @override
@@ -292,87 +339,94 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.grey[600],
       appBar: AppBar(
         title: Text("SmartBlinds", textAlign: TextAlign.center),
-        backgroundColor: Colors.grey[850],
+        backgroundColor: Colors.grey[800],
         elevation: 4.0,
-        actions: [ setAppbarStatusIcon()
-        ]
+        actions: [setAppbarStatusIcon()]
       ),
-      body: Container(
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Expanded(
-              flex: 4,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(setBackgroundText()),
-                    fit: BoxFit.scaleDown
-                  )
-                )
-              )
-            ),
-            Builder(
-              builder: (BuildContext context) {
-                // If status is currently in progress, display a progress indicator
-                if(widget.api.currentStatus == BlindStatusStates.InProgress) {
-                  return CircularProgressIndicator();
-                } else {
-                  return Container();
-                }
-              }
-            ),
-            Expanded(
-              flex: 4,
-              child: Stack(
-                alignment: AlignmentDirectional.bottomCenter,
-                children: [
-                  Container(
-                    height: 230,
-                    child: SleekCircularSlider(
-                      appearance: CircularSliderAppearance(
-                        customColors: CustomSliderColors(
-                          trackColor: Colors.black,
-                          progressBarColors: [
-                            Colors.black,
-                            Colors.blue[400],
-                            //Colors.grey
-                          ],
-                          shadowMaxOpacity: 1,
-                          shadowColor: Colors.white,
-                          shadowStep: 5
-                        ),
-                        size: 250,
-                        infoProperties: InfoProperties(
-                          topLabelText: "testing"
+            Row(
+              children: <Widget> [
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: <Widget> [
+                      Text(
+                        "${_sliderValue.round()} %",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[50]
                         )
                       ),
-                      initialValue: widget.api.currentPercentage == null ? 0 : widget.api.currentPercentage.toDouble(),
-                      onChangeEnd: (double value) {
-                        moveToPercentage(value.toInt());
-                      }
-                    )
-                  ),
-                  Container(
-                    height: 100,
-                    child: IconButton(
-                      onPressed: () {
-                        toggleBlind();
-                      },
-                      icon: Icon(Icons.power_settings_new),
-                      color: setStatusButtonColor(),
-                      iconSize: 80
-                    ),
-                  ),
-                ]
-              )
+                      RotatedBox(
+                        quarterTurns: 3,
+                        child: SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            activeTrackColor: Colors.grey[50],
+                            inactiveTrackColor: Colors.grey[800],
+                            trackShape: RectangularSliderTrackShape(),
+                            trackHeight: 4.0,
+                            thumbColor: Colors.grey,
+                            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                            overlayColor: Colors.grey.withAlpha(32),
+                            overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+                          ),
+                          child: Slider(
+                            value: _sliderValue,
+                            min: 0,
+                            max: 100,
+                            label: '${_sliderValue.round()} %',
+                            onChanged: widget.api.currentStatus == BlindStatusStates.InProgress ? null : (double newValue) => sliderOnChangeAction(newValue),
+                            onChangeEnd: (double newValue) {
+                              moveToPercentage(newValue.round());
+                            }
+                          ),
+                        ),
+                      )
+                    ]
+                  )
+                ),
+                Expanded(
+                  flex: 8,
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: <Widget> [
+                      Padding(
+                        padding: EdgeInsets.only(right: 20.0),
+                        child: Image.asset(_blindImagePath, fit: BoxFit.scaleDown)
+                      ),
+                      Builder(
+                        builder: (BuildContext context) {
+                          // If status is currently in progress, display a progress indicator
+                          if(widget.api.currentStatus == BlindStatusStates.InProgress) {
+                            return CircularProgressIndicator();
+                          } else {
+                            return Container();
+                          }
+                        }
+                      )
+                    ]
+                  )
+                )
+              ]
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                height: 40,
-                child: setStatusText()
-              )
+            Column(
+              children: <Widget> [
+                Container(
+                  child: IconButton(
+                    onPressed: widget.api.currentStatus == BlindStatusStates.InProgress ? null : () => buttonOnPressedAction(),
+                    icon: Icon(Icons.power_settings_new),
+                    color: setStatusButtonColor(),
+                    iconSize: 80
+                  ),
+                ),
+                Container(
+                  child: setStatusText()
+                )
+              ]
             )
           ]
         )

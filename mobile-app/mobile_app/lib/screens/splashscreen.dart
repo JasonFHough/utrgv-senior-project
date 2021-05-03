@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Color(0xffFFFFFF),
-      backgroundColor: Color(0xff000000),
+      backgroundColor: Colors.white,
       //backgroundColor: Color(0xff696969), //dimgrey
       body: Center(
         child: Column(
