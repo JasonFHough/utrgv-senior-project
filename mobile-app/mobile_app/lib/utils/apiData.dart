@@ -3,10 +3,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 
-String blindStatus = "http://csci4390.ddns.net/api/v1/blind/status",       // http://smartblind.ddns.net/api/v1/blind/status
-         blindOpen = "http://csci4390.ddns.net/api/v1/blind/open",         // http://smartblind.ddns.net/api/v1/blind/open
-         blindClose = "http://csci4390.ddns.net/api/v1/blind/close",       // http://smartblind.ddns.net/api/v1/blind/close
-         percent = "http://csci4390.ddns.net/api/v1/blind/percent";       // http://smartblind.ddns.net/api/v1/blind/close
+// Jason's Motor
+// String blindStatus = "http://csci4390.ddns.net/api/v1/blind/status",
+//          blindOpen = "http://csci4390.ddns.net/api/v1/blind/open",
+//          blindClose = "http://csci4390.ddns.net/api/v1/blind/close",
+//          percent = "http://csci4390.ddns.net/api/v1/blind/percent";
+
+// Luis's Motor
+String blindStatus = "http://smartblind.ddns.net/api/v1/blind/status",
+         blindOpen = "http://smartblind.ddns.net/api/v1/blind/open",
+         blindClose = "http://smartblind.ddns.net/api/v1/blind/close",
+         percent = "http://smartblind.ddns.net/api/v1/blind/percent";
 
 enum BlindStatusStates {
   Open,
